@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/alt-romes/social-index-search-engine/issues"
   },
-  "homepage": "https://github.com/alt-romes/social-index-search-engine#readme"
+  "homepage": "https://github.com/alt-romes/social-index-search-engine#readme",
+  "dependencies": {
+    "meilisearch": "^0.31.1"
+  }
 }
