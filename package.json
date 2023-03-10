@@ -1,0 +1,19 @@
+{
+  "name": "social-index-search-engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alt-romes/social-index-search-engine.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alt-romes/social-index-search-engine/issues"
+  },
+  "homepage": "https://github.com/alt-romes/social-index-search-engine#readme"
+}
