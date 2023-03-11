@@ -26,7 +26,7 @@ client.index('pagecontents')
 app.post('/user', (req, res) => {
     let username = req.query.username
     let email = req.query.email
-    db.run('INSERT INTO users (?,?)', username, email);
+    db.run('INSERT INTO users (name, email) VALUES (?,?)', username, email);
     res.send('User created succesfully');
 })
 
@@ -39,10 +39,10 @@ app.post('/bookmark', (req, res) => {
         let title = htmlParser("head title").text()
         let description = htmlParser("meta[name='description']").attr().content
         console.log("Title: " + title + "\nDesc: " + description)
-        if (title == null || description == null) { res.send("400");return; }
+        if (title == null || description == null) { res.send("400"); return; }
         db.all('SELECT * FROM bookmarks WHERE url =?', link, (error, qres) => {
             if (qres.length == 0) {
-                db.run('INSERT INTO bookmarks (?)', link, (err) => {
+                db.run('INSERT INTO bookmarks (link) VALUES (?)', link, (err) => {
                     if (err != null) {
                         res.send("400")
                         return;
@@ -53,7 +53,7 @@ app.post('/bookmark', (req, res) => {
             else {
                 last_row = qres[0].bid
             }
-            db.run('INSERT INTO userbookmarks (?,?)',last_row,userid)
+            db.run('INSERT INTO userbookmarks (bid, uid) VALUES (?,?)', last_row, userid)
         })
         client.index('pagecontents').addDocuments([{
             id: last_row,
