@@ -16,3 +16,4 @@ With easy access and creative layout we hope to incentivate you to use it and fi
 We also created a mascot, a cat, because of the amount of curiosity we share with this animal.
 
 
+# The website
