@@ -2,6 +2,7 @@
     --whiteish: #E2F0FE;
     --blueish: #4674A3;
     --black: #161207;
+    --purple: #62468c;
 }
 
 section {
@@ -12,7 +13,6 @@ html,body {
 }
 
 body {
-    z-index: 1;
     /* background-color: #E2F0FE; */
     font-weight: 500;
     font-family: 'Futura';
@@ -46,33 +46,50 @@ section:nth-of-type(2n) {
     border: none;
     border-radius: 0.6em;
     padding: 1em 1em;
-    transition: 1s;
     background-color: #436F9C;
     border: 1px solid var(--blueish);
-    width: 30vw
+    width: 35vw;
+    color: var(--whiteish);
+
+    transition: 0.5s;
+    /* transition: border 1s linear; */
+    /* transition: outline 1s linear; */
+    /* transition: background-color 0.5s linear; */
+    /* -webkit-transition: background-color 0.5s linear; */
+    /* -ms-transition: background-color 0.5s linear; */
 }
 
 #search-bar:focus {
-    outline: var(--black);
     border: 1px solid #436F9C;
     background-color: var(--whiteish);
     outline: 3px solid var(--whiteish);
+    color: var(--black);
+
+    transition: 0.5s;
+    /* transition: border 1s; */
+    /* transition: outline 1s linear; */
+    /* transition: background-color 0.5s linear; */
+    /* -webkit-transition: background-color 0.5s linear; */
+    /* -ms-transition: background-color 0.5s linear; */
 }
 
 #logo {
     position: absolute;
     right: 0%;
+    pointer-events: none;
 }
 
 /* @keyframes #logo { */
 /* } */
 
 #history-main {
+    padding: 4% 5%;
     max-width: 35em;
 }
 
 #history {
-    font-family: arial, sans-serif;
+    /* font-family: arial, sans-serif; */
+    background-color: var(--whiteish);
 }
 
 ul#history {
@@ -80,7 +97,7 @@ ul#history {
     padding: 0;
 }
 
-.entry {
+#history .entry {
     margin-bottom: 2em;
 }
 
@@ -111,25 +128,65 @@ ul#history {
     font-size: 0.90em;
     margin-top: 0.3em;
     color: var(--black);
+    /* font-weight: 200; */
+    /* font-family: Verdana, Geneva, sans-serif; */
+    font-family: arial, sans-serif;
 }
 
 .entry .title {
     font-size: 1.10em;
-    text-decoration: none;
-    color: var(--blueish);
-}
-
-.entry .title:hover {
     text-decoration: underline;
+    color: var(--blue);
 }
 
 .entry .title:visited {
-    color: #ba9602;
+    color: var(--purple);
 }
 
 #search-cat {
     position: absolute;
-    right:0;
-    bottom:-5%;
+    right:0%;
+    bottom:-15%;
+    pointer-events: none;
 }
+
+nav > div > #search-bar {
+    min-height: 20px;
+    height: 3vh;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+nav {
+    background-color: var(--blueish);
+    padding: 0.5em 2em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-item a {
+  padding: 10px 15px;
+  text-decoration: none;
+  color: var(--whiteish);
+}
+
+nav .logo-nav {
+    display: flex;
+    align-items:center;
+}
+
+main#search-results {
+    padding: 4% 7%;
+    max-width: 40em;
+}
+
+article.entry {
+    margin-bottom: 1.5em;
+}
+
+
 
