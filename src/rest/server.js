@@ -2,13 +2,13 @@ const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fet
 //meilisearch
 const { MeiliSearch } = require('meilisearch')
 //test
+const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('./src/database/database.db', (err) => {
     if (err) {
         return console.error(err.message);
     }
     console.log('Connected to the disk SQlite database at ./src/database/database.db');
 });
-const sqlite3 = require('sqlite3').verbose();
 const dummy = require('../dummy.json')
 const express = require('express')
 const app = express()
@@ -22,6 +22,13 @@ client.index('pagecontents')
     .updateFilterableAttributes([
         'id',
     ])
+
+app.post('/user', (req, res) => {
+    let username = req.query.username
+    let email = req.query.email
+    db.run('INSERT INTO users (?,?)', username, email);
+    res.send('User created succesfully');
+})
 
 app.post('/bookmark', (req, res) => {
     let userid = req.query.user
