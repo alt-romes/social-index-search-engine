@@ -1,3 +1,18 @@
+const searchBar = document.getElementById("search-bar");
+searchBar.addEventListener("keyup", event => {
+
+    if (event.defaultPrevented) {
+      return; // Do nothing if the event was already processed
+    }
+
+    switch (event.key) {
+        case "Enter":
+            console.log("Enter: " + searchBar.value)
+            break;
+    }
+
+    event.preventDefault();
+}, true)
 
 window.onload = e => {
 
