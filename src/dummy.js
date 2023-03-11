@@ -1,5 +1,6 @@
 const { MeiliSearch } = require('meilisearch')
 const express = require('express')
+const cheerio = require('cheerio')
 const dummy = require('./dummy.json')
 const app = express()
 app.use(express.json())
@@ -12,12 +13,6 @@ client.index('pagecontents')
         'id',
     ])
 
-   // fetch(url).then(resp => {
-
-   // })
-
-
-
 app.get('/search', function (req, res) {
     let query = req.query.query
     let ids = req.query.ids
@@ -27,19 +22,21 @@ app.post("/bookmark", function (req, res) {
     //Receives url in req.body
     let url = req.body.url
     let userID = req.body.userID
-    let pagecontents;
-    getJSON(url, (code, response) => {
-        if (code == null) {
-            pagecontents = response;
-        }
-        else{
-            console.log(code)
-            return;
-        }
+
+    fetch(url).then(resp => resp.text()).then(data => {
+        let htmlParser =cheerio.load(data)
+        let title = htmlParser("head title").text()
+        let description = htmlParser("meta[name='description']").attr().content
+        console.log("Title: " + title + "\nDesc: " + description)
+        if(title == null || description == null){return}
+        client.index('pagecontents').addDocuments([{
+            //TODO: THIS ID IS FROM THE DB
+            id: 4,
+            url: url,
+            content: title + " " + description
+        }]).then(task => res.send(task.status))
+        
     })
-    if(pagecontents != null){
-        console.log(pagecontents)
-    }
     //Go to DB, get follows of userID
 
 })
