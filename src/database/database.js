@@ -12,14 +12,12 @@ let db = new sqlite3.Database('./src/database/database.db', (err) => {
 db.run('DROP TABLE users');
 db.run('DROP TABLE bookmark');
 */
-//db.run('DROP TABLE *')
 //Table creation commands
-/*
-db.run('CREATE TABLE users(uid INT PRIMARY KEY, email TEXT, name TEXT)');
-db.run('CREATE TABLE bookmark(bid INT PRIMARY KEY, url TEXT)');
-db.run('CREATE TABLE followers(uidfollower INT, uidfollowed INT, FOREIGN KEY(uidfollower) REFERENCES users(uid), FOREIGN KEY(uidfollowed) REFERENCES users(uid))');
-db.run('CREATE TABLE userbookmarks(bid INT, uid INT, FOREIGN KEY(uid) REFERENCES users(uid), FOREIGN KEY(bid) REFERENCES bookmarks(bid))');
-*/
+
+db.run('CREATE TABLE users(uid INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, name TEXT)');
+db.run('CREATE TABLE bookmark(bid INTEGER PRIMARY KEY AUTOINCREMENT, url TEXT)');
+db.run('CREATE TABLE followers(uidfollower INTEGER, uidfollowed INTEGER, FOREIGN KEY(uidfollower) REFERENCES users(uid), FOREIGN KEY(uidfollowed) REFERENCES users(uid))');
+db.run('CREATE TABLE userbookmarks(bid INTEGER, uid INTEGER, FOREIGN KEY(uid) REFERENCES users(uid), FOREIGN KEY(bid) REFERENCES bookmarks(bid))');
 
 
 // close the database connection
