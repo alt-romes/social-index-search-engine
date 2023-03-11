@@ -1,4 +1,5 @@
 const path = require('node:path');
+const fs = require('fs');
 const jwt = require("jsonwebtoken");
 const TOKEN_KEY = "SampleText"
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
@@ -17,6 +18,9 @@ const dummy = require('../database/mielidb.json')
 const express = require('express')
 const app = express()
 const localport = 3000
+
+const searchPage = cheerio.load(fs.readFileSync('./frontend/search.html'));
+
 app.use(express.json())
 
 const client = new MeiliSearch({ host: 'http://localhost:7700' })
@@ -131,16 +135,18 @@ app.get('/search', (req, res) => {
         id_string = id_string.replace(",)", ")")
         db.all('SELECT bid FROM userbookmarks WHERE uid IN ' + id_string, (err2, rows2) => {
             rows2 = rows2.map(el => el.bid)
-            rows2 = rows2.filter(el => el != null)
-            client.index('pagecontents').search(query, { filter: "id IN [" + rows2 + "]" }).then((result) => {
-                res.send(result)
-                //ROMES:TODO: 
-                /*res.sendFile(path.join(__dirname, '../../frontend/search.html'));*/
+            rows2 = rows2.filter(el => el!=null)
+            client.index('pagecontents').search(query, { filter: "id IN [" + rows2 + "]" }).then((results) => {
+                let completePage = searchPage.clone()
+                results.hits.forEach(result => {
+                    completePage('#search-results').append(createArticle(result));
+                })
+                console.log(completePage);
+                res.send(completePage.html());
             })
         })
     })
 })
-
 
 app.listen(localport, () => {
     console.log(`Example app listening on port ${localport}`)
@@ -179,3 +185,31 @@ app.get('/debug',(req,res) =>{
     
 })
 
+function createArticle(result) {
+    let url = result.url
+    let title = result.title
+    let content = result.description
+    let domain = parseDomain(url)
+    return `
+          <article class="entry">
+              <div class="header">
+                  <img style="width: 18px; height: 18px;" src="https://${domain}/favicon.ico" alt="">
+                  <a class="header" href="${url}">${title}</a>
+                  <span class="domain">
+                      (
+                    <a href="${url}">${domain}</a>
+                      )
+                  </span>
+              </div>
+              <p class="description">
+                  ${content}
+              </p>
+          </article>
+           `
+}
+
+function parseDomain(url) {
+    let matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+    let domain = matches && matches[1];  // domain will be null if no match is found
+    return domain
+}
