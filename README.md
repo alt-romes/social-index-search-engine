@@ -13,7 +13,7 @@ Do you have a lot of bookmarks accumulated? This might be the website you've bee
 This website allows you to create your own personalized search engine, where you can share your bookmarks with your friends and see what they have been curious about.
 With easy access and creative layout we hope to incentivate you to use it and find a new organized home for your favorite websites.
 
-We also created a mascot, a cat, because of the amount of curiosity we share with this animal.
+We also created a mascot, a cat because of the amount of curiosity we share with this animal.
 
 
 # The website
