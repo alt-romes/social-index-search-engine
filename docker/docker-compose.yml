@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  meili:
+    image: "getmeili/meilisearch:latest"
+    ports:
+      - "7700:7700"
+    networks:
+      - mysite-backend-network
+  web:
+    image: getting-started
+    environment:
+      PG_HOST: meili
+    ports:
+      - "3000:3000"
+    command: node src/rest/server.js
+    networks:
+      - mysite-backend-network
+
+networks:
+  mysite-backend-network:
+    name: mysite-backend-network
