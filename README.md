@@ -17,3 +17,4 @@ We also created a mascot, a cat, because of the amount of curiosity we share wit
 
 
 # The website
+![Screenshot_2023-03-11_at_18 09 57](https://user-images.githubusercontent.com/88866840/224505017-bfacd8c6-5255-4b5c-9362-a83970bb50e7.png)
