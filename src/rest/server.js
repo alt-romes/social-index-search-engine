@@ -1,3 +1,4 @@
+const path = require('node:path');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 //meilisearch
 const { MeiliSearch } = require('meilisearch')
@@ -73,7 +74,6 @@ app.post('/follow', (req, res) => {
     //Add target user to followlist in DB
     //if no target user then return 404
     res.send('followed user! ' + targetuser)
-
 })
 
 app.get('/search', (req, res) => {
@@ -81,8 +81,27 @@ app.get('/search', (req, res) => {
     let user = req.query.user
     let ids = req.query.id //temporary
     client.index('pagecontents').search(query, { filter: 'id IN ' + ids }).then((result) => res.send(result))
+
+    res.sendFile(path.join(__dirname, '../../frontend/search.html'));
 })
 
 app.listen(localport, () => {
     console.log(`Example app listening on port ${localport}`)
 })
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/index.html'));
+})
+
+app.get('/style.css', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/style.css'));
+})
+
+app.get('/index.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/index.js'));
+})
+
+app.get('/search.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/search.js'));
+})
+
