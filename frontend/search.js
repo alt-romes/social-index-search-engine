@@ -8,6 +8,7 @@ searchBar.addEventListener("keyup", event => {
     switch (event.key) {
         case "Enter":
             console.log("Enter: " + searchBar.value)
+            search(searchBar.value)
             break;
     }
 
@@ -15,10 +16,8 @@ searchBar.addEventListener("keyup", event => {
 }, true)
 
 
-function search() {
-    let val = document.getElementById("input").value;
-    console.log("searched " + val)
-    postData("", val).then(data => _)
+function search(val) {
+    window.location.href = `${window.location.protocol}//${window.location.host}/search?user=1&query=${encodeURIComponent(val)}`;
 }
 
 function follow() {

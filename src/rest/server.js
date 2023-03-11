@@ -132,8 +132,11 @@ app.get('/search', (req, res) => {
         db.all('SELECT bid FROM userbookmarks WHERE uid IN ' + id_string, (err2, rows2) => {
             rows2 = rows2.map(el => el.bid)
             rows2 = rows2.filter(el => el != null)
-            client.index('pagecontents').search(query).then((result) => res.send(result))
-            res.sendFile(path.join(__dirname, '../../frontend/search.html'));
+            client.index('pagecontents').search(query).then((result) => {
+                res.send(result)
+                //ROMES:TODO: 
+                /*res.sendFile(path.join(__dirname, '../../frontend/search.html'));*/
+            })
         })
     })
 })
