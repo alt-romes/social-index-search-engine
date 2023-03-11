@@ -85,21 +85,12 @@ app.post('/bookmark', (req, res) => {
                         res.send("Insert failed")
                         return;
                     }
-                    db.all("SELECT last_insert_rowid() FROM bookmarks", (row_err, row_id) => { addContentLine(row_id[0]["last_insert_rowid()"], link, title, description, res) })
+                    db.all("SELECT last_insert_rowid() FROM bookmarks", (row_err, row_id) => { addContentLine(row_id[0]["last_insert_rowid()"], link, title, description, res,userID) })
                 })
             }
             else {
-                addContentLine(qres[0].bid, link, title, description, res)
+                addContentLine(qres[0].bid, link, title, description, res,userID)
             }
-            db.all('SELECT * FROM userbookmarks WHERE bid=?', last_row, (err, rows) => {
-                if (err != null) {
-                    res.send("userbookmarks failed")
-                }
-                if (rows.length == 0) {
-                    db.run('INSERT INTO userbookmarks (bid,uid) VALUES (?,?)', last_row, userID)
-                }
-                console.log(rows)
-            })
         })
     })
 
@@ -152,7 +143,16 @@ app.listen(localport, () => {
     console.log(`Example app listening on port ${localport}`)
 })
 
-function addContentLine(last_row, link, title, description, res) {
+function addContentLine(last_row, link, title, description, res,userID) {
+    db.all('SELECT * FROM userbookmarks WHERE bid=?', last_row, (err, rows) => {
+        if (err != null) {
+            res.send("userbookmarks failed")
+        }
+        if (rows.length == 0) {
+            db.run('INSERT INTO userbookmarks (bid,uid) VALUES (?,?)', last_row, userID)
+        }
+        console.log(rows)
+    })
     client.index('pagecontents').addDocuments([{
         id: last_row,
         url: link,
