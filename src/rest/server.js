@@ -31,37 +31,73 @@ app.post('/user', (req, res) => {
     let username = req.query.username
     let email = req.query.email
     let password = req.query.password
-    db.run('INSERT INTO users (name, email, password) VALUES (?,?)', username, email);
-    res.send('User created succesfully');
+    db.all('SELECT * FROM users WHERE name=?', username, (err, qres) => {
+        if (qres.length != 0) {
+            res.send('Username is already in use')
+        } else {
+            db.run('INSERT INTO users (name, email, password) VALUES (?,?,?)', username, email, password);
+            res.send('User created succesfully');
+        }
+    })
 })
 app.put('/login', (req, res) => {
     let username = req.query.username
     let password = req.query.password
-    db.all('SELECT * FROM users WHERE username =?', username, (error1, qres1) => {
-        if (qres1.values.length == 0) {
+    db.all('SELECT * FROM users WHERE name =?', username, (error1, qres1) => {
+        if (qres1.length == 0) {
             res.send('No user called ' + username + ' exists')
         } else {
-            db.all('SELECT * FROM ? WHERE password=?', qres, password, (error2, qres2) => {
-                if (qres2.values.length == 0) {
-                    const token = jwt.sign(
-                        { user_id: qres1.uid },
-                        TOKEN_KEY,
-                        {
-                            expiresIn: "2h",
-                        }
-                    );
-                    db.run('INSERT INTO tokens (jwt, uid) VALUES (?,?)', token, qres1.uid)
-                    res.send({ "userid": userid })
-                } else {
-                    res.send('Wrong password')
-                }
-            })
+            //db.all('SELECT * FROM users WHERE password=?', password, (error2, qres2) => {
+            if (qres1[0].password == password) {
+                const token = jwt.sign(
+                    { user_id: qres1.uid },
+                    TOKEN_KEY,
+                    {
+                        expiresIn: "2h",
+                    }
+                );
+                db.run('INSERT INTO tokens (jwt, uid) VALUES (?,?)', token, qres1.uid)
+                res.send({ "userid": qres1[0].uid, "jwt": token })
+            } else {
+                res.send('Wrong password')
+            }
         }
     })
 
 })
+//WARNING everything after this function will require authentication
+app.use(function (req, res, next) {
+    if (!req.headers.authorization) {
+        return res.status(403).json({ error: 'No credentials sent!' });
+    } else {
+        db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authorization.split(" ")[1], (err, qres) => {
+            if (qres.length == 0) {
+                return res.status(401).json({ error: 'Invalid Token' });
+            } else {
+                var dateNow = new Date();
+                //parse json
+                let parsed = jwt.decode(qres[0].jwt, {
+                    complete: true
+                })
+                if (parsed.payload.exp < dateNow.getTime() / 1000) {
+                    //TODO remove token from database
+                    console.log('user token exp')
+                    return res.status(401).send('Token expired');
+                } else {
+                    next();
+
+                }
+            }
+        })
+    }
+});
+
 app.post('/bookmark', (req, res) => {
-    let userID = req.body.userID
+    let userID;
+
+    db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authorization.split(" ")[1], (err, qres) => {
+        userID = qres.user_id
+    })
     console.log("userID: " + userID)
     let link = req.body.link
     let last_row = -1;
@@ -102,22 +138,24 @@ app.post('/bookmark', (req, res) => {
 })
 
 app.post('/follow', (req, res) => {
+
     user = req.query.user
     targetuser = req.query.targetuser
     db.all('SELECT * FROM users WHERE uid=?', user, (err, qres1) => {
-        if (qres1.values.length == 0) {
+        console.log(qres1)
+        if (qres1.length == 0) {
             res.send('You do not exist')
         } else {
             db.all('SELECT * FROM users WHERE uid=?', user, (err, qres2) => {
-                if (qres2.values.length == 0) {
+                if (qres2.length == 0) {
                     res.send('Target user does not exist')
                 } else {
                     db.run('INSERT INTO followers (uidfollower, uidfollowed) VALUES  (?, ?)', user, targetuser)
+                    res.send('followed user! ' + targetuser)
                 }
             })
         }
     })
-    res.send('followed user! ' + targetuser)
 })
 
 app.get('/search', (req, res) => {
