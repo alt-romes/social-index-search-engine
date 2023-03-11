@@ -170,7 +170,6 @@ app.get('/index.js', (req, res) => {
 app.get('/search.js', (req, res) => {
     res.sendFile(path.join(__dirname, '../../frontend/search.js'));
 })
-<<<<<<< HEAD
 app.get('/debug',(req,res) =>{
     client.index('pagecontents').search("").then(data => {console.log("MEILI STATE:");console.log(data)})
     db.all('SELECT * FROM users', (error,result) =>{console.log("USERS: ");result.forEach(el =>{console.log(el)})})
@@ -178,9 +177,5 @@ app.get('/debug',(req,res) =>{
     db.all('SELECT * FROM userbookmarks', (error,result) =>{console.log("USERBOOKMARKS: ");result.forEach(el =>{console.log(el)})})
     db.all('SELECT * FROM followers', (error,result) =>{console.log("FOLLOWERS: ");result.forEach(el =>{console.log(el)})})
     
-=======
-app.get('/debug', (req, res) => {
-
->>>>>>> 8624213c2153764f4e47ba130467cf59fc337a8c
 })
 
