@@ -1,4 +1,4 @@
-const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+//const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 //meilisearch
 const { MeiliSearch } = require('meilisearch')
 //test
@@ -9,6 +9,7 @@ let db = new sqlite3.Database('./src/database/database.db', (err) => {
     }
     console.log('Connected to the disk SQlite database at ./src/database/database.db');
 });
+const cheerio = require('cheerio')
 const dummy = require('../dummy.json')
 const express = require('express')
 const app = express()
@@ -31,7 +32,8 @@ app.post('/user', (req, res) => {
 })
 
 app.post('/bookmark', (req, res) => {
-    let userid = req.query.user
+    let userID = req.body.userID
+    console.log("userID: " + userID)
     let link = req.body.link
     let last_row = -1;
     fetch(link).then(resp => resp.text()).then(data => {
@@ -39,27 +41,33 @@ app.post('/bookmark', (req, res) => {
         let title = htmlParser("head title").text()
         let description = htmlParser("meta[name='description']").attr().content
         console.log("Title: " + title + "\nDesc: " + description)
-        if (title == null || description == null) { res.send("400");return; }
+        if (title == null || description == null) { res.send("Invalid website");return; }
         db.all('SELECT * FROM bookmarks WHERE url =?', link, (error, qres) => {
+            if(error != null){
+                console.log(error)
+            }
             if (qres.length == 0) {
-                db.run('INSERT INTO bookmarks (?)', link, (err) => {
+                db.run('INSERT INTO bookmarks (url) VALUES (?)', link, (err) => {
                     if (err != null) {
-                        res.send("400")
+                        res.send("Insert failed")
                         return;
                     }
-                    last_row = this.lastID
+                    db.all("SELECT last_insert_rowid() FROM bookmarks", (row_err,row_id) =>{addContentLine(row_id[0]["last_insert_rowid()"],link,title,description,res)})
                 })
             }
             else {
-                last_row = qres[0].bid
+                addContentLine(qres[0].bid,link,title,description,res)
             }
-            db.run('INSERT INTO userbookmarks (?,?)',last_row,userid)
+            db.all('SELECT * FROM userbookmarks WHERE bid=?',last_row,(err,rows)=>{
+                if(err != null){
+                    res.send("userbookmarks failed")
+                }
+                if(rows.length == 0){
+                    db.run('INSERT INTO userbookmarks (bid,uid) VALUES (?,?)',last_row,userID)
+                }
+                console.log(rows)
+            })
         })
-        client.index('pagecontents').addDocuments([{
-            id: last_row,
-            url: link,
-            content: title + " " + description
-        }]).then(task => res.send(task.status))
     })
 
 })
@@ -77,10 +85,28 @@ app.post('/follow', (req, res) => {
 app.get('/search', (req, res) => {
     let query = req.query.query
     let user = req.query.user
-    let ids = req.query.id //temporary
-    client.index('pagecontents').search(query, { filter: 'id IN ' + ids }).then((result) => res.send(result))
+    db.all('SELECT uidfollowed FROM followers WHERE uidfollower =?',user,(err1,rows1) =>{
+        rows1.push(user)
+        let id_string = "("
+        rows1.forEach((el) =>{id_string = id_string.concat(el + ",")})
+        id_string = id_string.concat(")")
+        id_string = id_string.replace(",)" , ")")
+        db.all('SELECT bid FROM userbookmarks WHERE uid IN '+id_string,(err2,rows2) =>{
+            rows2 = rows2.map(el => el.bid)
+            rows2 = rows2.filter(el => el!=null)
+            client.index('pagecontents').search(query).then((result) => res.send(result))
+        })
+    })
 })
 
 app.listen(localport, () => {
     console.log(`Example app listening on port ${localport}`)
 })
+
+function addContentLine(last_row,link,title,description,res){
+    client.index('pagecontents').addDocuments([{
+        id: last_row,
+        url: link,
+        content: title + " " + description
+    }]).then(task => res.send(task.status))
+}
