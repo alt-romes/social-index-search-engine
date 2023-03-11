@@ -125,9 +125,11 @@ app.get('/search', (req, res) => {
         db.all('SELECT bid FROM userbookmarks WHERE uid IN '+id_string,(err2,rows2) =>{
             rows2 = rows2.map(el => el.bid)
             rows2 = rows2.filter(el => el!=null)
-            console.log(rows2)
-            client.index('pagecontents').search(query,{filter: "id IN [" + rows2 + "]"}).then((result) => console.log(result))
-            res.sendFile(path.join(__dirname, '../../frontend/search.html'));
+            client.index('pagecontents').search(query,{filter: "id IN [" + rows2 + "]"}).then((result) => {
+                res.send(result)
+                //ROMES:TODO: 
+                /*res.sendFile(path.join(__dirname, '../../frontend/search.html'));*/
+            })
         })
     })
 })
