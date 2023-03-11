@@ -61,6 +61,7 @@ app.put('/login', (req, res) => {
                     }
                 );
                 db.run('INSERT INTO tokens (jwt, uid) VALUES (?,?)', token, qres1.uid)
+                res.cookie('authcookie', token, { maxAge: 900000, httpOnly: false })
                 res.send({ "userid": qres1[0].uid, "jwt": token })
             } else {
                 res.send('Wrong password')
@@ -160,7 +161,11 @@ app.post('/bookmark', (req, res) => {
 
 app.post('/follow', (req, res) => {
 
-    user = req.query.user
+    let userID;
+
+    db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authorization.split(" ")[1], (err, qres) => {
+        userID = qres.user_id
+    })
     targetuser = req.query.targetuser
     db.all('SELECT * FROM users WHERE uid=?', user, (err, qres1) => {
         console.log(qres1)
@@ -180,8 +185,11 @@ app.post('/follow', (req, res) => {
 })
 
 app.get('/search', (req, res) => {
+    let userID;
+    db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authorization.split(" ")[1], (err, qres) => {
+        userID = qres.user_id
+    })
     let query = req.query.query
-    let user = req.query.user
     db.all('SELECT uidfollowed FROM followers WHERE uidfollower =?', user, (err1, rows1) => {
         rows1.push(user)
         let id_string = "("
