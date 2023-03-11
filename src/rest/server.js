@@ -61,6 +61,7 @@ app.put('/login', (req, res) => {
                     }
                 );
                 db.run('INSERT INTO tokens (jwt, uid) VALUES (?,?)', token, qres1.uid)
+                res.cookie('authcookie', token, { maxAge: 900000, httpOnly: false })
                 res.send({ "userid": qres1[0].uid, "jwt": token })
             } else {
                 res.send('Wrong password')
@@ -121,11 +122,11 @@ app.post('/bookmark', (req, res) => {
                         res.send("Insert failed")
                         return;
                     }
-                    db.all("SELECT last_insert_rowid() FROM bookmarks", (row_err, row_id) => { addContentLine(row_id[0]["last_insert_rowid()"], link, title, description, res,userID) })
+                    db.all("SELECT last_insert_rowid() FROM bookmarks", (row_err, row_id) => { addContentLine(row_id[0]["last_insert_rowid()"], link, title, description, res, userID) })
                 })
             }
             else {
-                addContentLine(qres[0].bid, link, title, description, res,userID)
+                addContentLine(qres[0].bid, link, title, description, res, userID)
             }
         })
     })
@@ -134,7 +135,11 @@ app.post('/bookmark', (req, res) => {
 
 app.post('/follow', (req, res) => {
 
-    user = req.query.user
+    let userID;
+
+    db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authorization.split(" ")[1], (err, qres) => {
+        userID = qres.user_id
+    })
     targetuser = req.query.targetuser
     db.all('SELECT * FROM users WHERE uid=?', user, (err, qres1) => {
         console.log(qres1)
@@ -154,8 +159,11 @@ app.post('/follow', (req, res) => {
 })
 
 app.get('/search', (req, res) => {
+    let userID;
+    db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authorization.split(" ")[1], (err, qres) => {
+        userID = qres.user_id
+    })
     let query = req.query.query
-    let user = req.query.user
     db.all('SELECT uidfollowed FROM followers WHERE uidfollower =?', user, (err1, rows1) => {
         rows1.push(user)
         let id_string = "("
@@ -181,7 +189,7 @@ app.listen(localport, () => {
     console.log(`Example app listening on port ${localport}`)
 })
 
-function addContentLine(last_row, link, title, description, res,userID) {
+function addContentLine(last_row, link, title, description, res, userID) {
     db.all('SELECT * FROM userbookmarks WHERE bid=?', last_row, (err, rows) => {
         if (err != null) {
             res.send("userbookmarks failed")
@@ -214,22 +222,13 @@ app.get('/index.js', (req, res) => {
 app.get('/search.js', (req, res) => {
     res.sendFile(path.join(__dirname, '../../frontend/search.js'));
 })
-<<<<<<< HEAD
-app.get('/debug',(req,res) =>{
-    client.index('pagecontents').search("").then(data => {console.log("MEILI STATE:");console.log(data)})
-    db.all('SELECT * FROM users', (error,result) =>{console.log("USERS: ");result.forEach(el =>{console.log(el)})})
-    db.all('SELECT * FROM bookmarks', (error,result) => {console.log("BOOKMARKS "); result.forEach(el => console.log(el))})
-    db.all('SELECT * FROM userbookmarks', (error,result) =>{console.log("USERBOOKMARKS: ");result.forEach(el =>{console.log(el)})})
-    db.all('SELECT * FROM followers', (error,result) =>{console.log("FOLLOWERS: ");result.forEach(el =>{console.log(el)})})
-    
-=======
 app.get('/debug', (req, res) => {
     client.index('pagecontents').search("").then(data => { console.log("MEILI STATE:"); console.log(data) })
     db.all('SELECT * FROM users', (error, result) => { console.log("USERS: "); result.forEach(el => { console.log(el) }) })
     db.all('SELECT * FROM bookmarks', (error, result) => { console.log("BOOKMARKS "); result.forEach(el => console.log(el)) })
     db.all('SELECT * FROM userbookmarks', (error, result) => { console.log("USERBOOKMARKS: "); result.forEach(el => { console.log(el) }) })
     db.all('SELECT * FROM followers', (error, result) => { console.log("FOLLOWERS: "); result.forEach(el => { console.log(el) }) })
->>>>>>> f8c7b0add69b983c301d85c96adae28e84478424
+
 })
 
 function createArticle(result) {
