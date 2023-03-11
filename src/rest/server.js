@@ -30,7 +30,7 @@ app.post('/user', (req, res) => {
     let username = req.query.username
     let email = req.query.email
     let password = req.query.password
-    db.run('INSERT INTO users (name, email, password) VALUES (?,?)', username, email);
+    db.run('INSERT INTO users (name, email, password) VALUES (?,?,?)', username, email,password);
     res.send('User created succesfully');
 })
 app.put('/login', (req, res) => {
@@ -143,8 +143,9 @@ function addContentLine(last_row,link,title,description,res){
     client.index('pagecontents').addDocuments([{
         id: last_row,
         url: link,
-        content: title + " " + description
-    }]).then(task => res.send(task.status))
+        title: title,
+        description: description
+    }]).then(task => {console.log("Adding record to meili\nID: "+ last_row + "\nURL: " +link);res.send(task.status)})
 }
 
 app.get('/', (req, res) => {
@@ -163,6 +164,11 @@ app.get('/search.js', (req, res) => {
     res.sendFile(path.join(__dirname, '../../frontend/search.js'));
 })
 app.get('/debug',(req,res) =>{
-
+    client.index('pagecontents').search("").then(data => {console.log("MEILI STATE:");console.log(data)})
+    db.all('SELECT * FROM users', (error,result) =>{console.log("USERS: ");result.forEach(el =>{console.log(el)})})
+    db.all('SELECT * FROM bookmarks', (error,result) => {console.log("BOOKMARKS "); result.forEach(el => console.log(el))})
+    db.all('SELECT * FROM userbookmarks', (error,result) =>{console.log("USERBOOKMARKS: ");result.forEach(el =>{console.log(el)})})
+    db.all('SELECT * FROM followers', (error,result) =>{console.log("FOLLOWERS: ");result.forEach(el =>{console.log(el)})})
+    
 })
 
