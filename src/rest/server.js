@@ -23,8 +23,14 @@ client.index('pagecontents')
         'id',
     ])
 
+app.post('/user', (req, res) => {
+    let username = req.query.username
+    let email = req.query.email
+    db.run('INSERT INTO users (?,?)', username, email);
+    res.send('User created succesfully');
+})
+
 app.post('/bookmark', (req, res) => {
-    res.send('Hello World!')
     let userid = req.query.user
     let link = req.body.link
     fetch(link).then(resp => resp.text()).then(data => {
