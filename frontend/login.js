@@ -1,5 +1,7 @@
+var auth_token = "";
+
 function login(url,username, password){
-    putData(url+"?username=" +username+"&password=" + password,{}).then(data =>{return data})
+    putData(url+"?username=" +username+"&password=" + password,{}).then(data =>{auth_token = data;return data;})
 }
 
 

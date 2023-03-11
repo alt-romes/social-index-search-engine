@@ -61,7 +61,7 @@ app.put('/login', (req, res) => {
                     }
                 );
                 db.run('INSERT INTO tokens (jwt, uid) VALUES (?,?)', token, qres1.uid)
-                res.cookie('authcookie', token, { maxAge: 900000, httpOnly: false })
+                res.cookie('authcookie', token, { maxAge: 900000, httpOnly: false ,sameSite:'lax'})
                 res.send({ "userid": qres1[0].uid, "jwt": token })
             } else {
                 res.send('Wrong password')
@@ -98,10 +98,10 @@ app.get('/debug', (req, res) => {
 })
 //WARNING everything after this function will require authentication
 app.use(function (req, res, next) {
-    if (!req.headers.authorization) {
+    if (!req.headers.authentication) {
         return res.status(403).json({ error: 'No credentials sent!' });
     } else {
-        db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authorization.split(" ")[1], (err, qres) => {
+        db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authentication.split(" ")[1], (err, qres) => {
             if (qres.length == 0) {
                 return res.status(401).json({ error: 'Invalid Token' });
             } else {
@@ -126,12 +126,11 @@ app.use(function (req, res, next) {
 app.post('/bookmark', (req, res) => {
     let userID;
 
-    db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authorization.split(" ")[1], (err, qres) => {
+    db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authentication.split(" ")[1], (err, qres) => {
         userID = qres.user_id
-    })
-    console.log("userID: " + userID)
-    let link = req.body.link
-    let last_row = -1;
+        console.log("userID: " + userID)
+        let link = req.body.link
+        let last_row = -1;
     fetch(link).then(resp => resp.text()).then(data => {
         let htmlParser = cheerio.load(data)
         let title = htmlParser("head title").text()
@@ -156,7 +155,8 @@ app.post('/bookmark', (req, res) => {
             }
         })
     })
-
+    
+    })
 })
 
 app.post('/follow', (req, res) => {
