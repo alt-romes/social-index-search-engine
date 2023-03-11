@@ -63,6 +63,8 @@ function createEntry(title, description, link) {
 }
 
 function parseDomain(url) {
-    return url;
+    let matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+    let domain = matches && matches[1];  // domain will be null if no match is found
+    return domain
 }
 
