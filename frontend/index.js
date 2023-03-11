@@ -11,18 +11,27 @@ window.onload = e => {
 }
 
 function addEntry(main, entry) {
-        let e = createEntry(entry.title, entry.description);
+    let e = createEntry(entry.title, entry.description, "https://github.com");
         console.log(e);
         main.appendChild(e);
 }
 
-function createEntry(title, description) {
+function createEntry(title, description, link) {
+
+    let domain = parseDomain(link);
 
     let header = document.createElement("div");
     header.classList.add("header");
 
+    let ico = document.createElement("img");
+    ico.src = domain + "/favicon.ico" // "https://" +
+    ico.style.width = "18px";
+    ico.style.height = "18px";
+    ico.classList.add("title");
+    ico.innerHTML = title;
+
     let titl = document.createElement("a");
-    titl.href = "https://alt-romes.github.io"
+    titl.href = link
     titl.classList.add("title");
     titl.innerHTML = title;
 
@@ -31,12 +40,13 @@ function createEntry(title, description) {
     url_span.innerHTML = "("
 
     let url = document.createElement("a");
-    url.href = "https://alt-romes.github.io"
-    url.innerHTML = "alt-romes.github.io";
+    url.href = link
+    url.innerHTML = domain;
 
     url_span.appendChild(url)
     url_span.innerHTML += ")"
 
+    header.appendChild(ico);
     header.appendChild(titl);
     header.appendChild(url_span);
 
@@ -50,5 +60,9 @@ function createEntry(title, description) {
     entry.appendChild(desc);
 
     return entry;
+}
+
+function parseDomain(url) {
+    return url;
 }
 

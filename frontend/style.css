@@ -97,7 +97,7 @@ ul#history {
     padding: 0;
 }
 
-.entry {
+#history .entry {
     margin-bottom: 2em;
 }
 
@@ -135,12 +135,8 @@ ul#history {
 
 .entry .title {
     font-size: 1.10em;
-    text-decoration: none;
-    color: var(--blue);
-}
-
-.entry .title:hover {
     text-decoration: underline;
+    color: var(--blue);
 }
 
 .entry .title:visited {
@@ -182,5 +178,15 @@ nav .logo-nav {
     display: flex;
     align-items:center;
 }
+
+main#search-results {
+    padding: 4% 7%;
+    max-width: 40em;
+}
+
+article.entry {
+    margin-bottom: 1.5em;
+}
+
 
 
