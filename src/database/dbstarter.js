@@ -25,6 +25,8 @@ db.run('CREATE TABLE followers(uidfollower INTEGER, uidfollowed INTEGER, FOREIGN
 db.run('CREATE TABLE userbookmarks(bid INTEGER, uid INTEGER, FOREIGN KEY(uid) REFERENCES users(uid), FOREIGN KEY(bid) REFERENCES bookmarks(bid))');
 */
 
+//Token TABLE
+db.run('CREATE TABLE tokens(jwt INTEGER PRIMARY KEY, uid INTEGER, FOREIGN KEY (uid) REFERENCES users(uid))')
 // close the database connection
 db.close((err) => {
     if (err) {

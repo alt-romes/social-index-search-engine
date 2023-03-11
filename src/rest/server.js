@@ -1,4 +1,5 @@
 const path = require('node:path');
+const jwt = require("jsonwebtoken");
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 //meilisearch
 const { MeiliSearch } = require('meilisearch')
@@ -27,11 +28,27 @@ client.index('pagecontents')
 app.post('/user', (req, res) => {
     let username = req.query.username
     let email = req.query.email
-    db.run('INSERT INTO users (name, email) VALUES (?,?)', username, email);
+    let password = req.query.password
+    db.run('INSERT INTO users (name, email, password) VALUES (?,?)', username, email);
     res.send('User created succesfully');
 })
 app.put('/login', (req, res) => {
-    let username
+    let username = req.query.username
+    let password = req.query.password
+    db.all('SELECT * FROM users WHERE username =?', username, (error1, qres1) => {
+        if (qres.values == 0) {
+            res.send('No user called ' + username + ' exists')
+        } else {
+            db.all('SELECT * FROM ? WHERE password=?', qres, password, (error2, qres2) => {
+                if (qres2) {
+                    res.send({ "userid": userid })
+                } else {
+                    res.send('Wrong password')
+                }
+            })
+        }
+    })
+
 })
 app.post('/bookmark', (req, res) => {
     let userid = req.query.user
@@ -70,7 +87,19 @@ app.post('/bookmark', (req, res) => {
 app.post('/follow', (req, res) => {
     user = req.query.user
     targetuser = req.query.targetuser
-
+    db.all('SELECT * FROM users WHERE uid=?', user, (err, qres1) => {
+        if (qres.values == 0) {
+            res.send('You do not exist')
+        } else {
+            db.all('SELECT * FROM users WHERE uid=?', user, (err, qres2) => {
+                if (qres.values == 0) {
+                    res.send('Target user does not exist')
+                } else {
+                    db.run('INSERT INTO followers (uidfollower, uidfollowed) VALUES  (?, ?)', user, targetuser)
+                }
+            })
+        }
+    })
     //Add target user to followlist in DB
     //if no target user then return 404
     res.send('followed user! ' + targetuser)
