@@ -24,41 +24,36 @@ client.index('pagecontents')
     ])
 
 app.post('/bookmark', (req, res) => {
-    res.send('Hello World!')
     let userid = req.query.user
     let link = req.body.link
+    let last_row = -1;
     fetch(link).then(resp => resp.text()).then(data => {
         let htmlParser = cheerio.load(data)
         let title = htmlParser("head title").text()
         let description = htmlParser("meta[name='description']").attr().content
         console.log("Title: " + title + "\nDesc: " + description)
-        if (title == null || description == null) { return }
+        if (title == null || description == null) { res.send("400");return; }
+        db.all('SELECT * FROM bookmarks WHERE url =?', link, (error, qres) => {
+            if (qres.length == 0) {
+                db.run('INSERT INTO bookmarks (?)', link, (err) => {
+                    if (err != null) {
+                        res.send("400")
+                        return;
+                    }
+                    last_row = this.lastID
+                })
+            }
+            else {
+                last_row = qres[0].bid
+            }
+            db.run('INSERT INTO userbookmarks (?,?)',last_row,userid)
+        })
+        client.index('pagecontents').addDocuments([{
+            id: last_row,
+            url: link,
+            content: title + " " + description
+        }]).then(task => res.send(task.status))
     })
-    db.all('SELECT * FROM bookmarks WHERE url =?' + link, (error, res) => {
-        if (res.length == 0) {
-            db.run('INSERT INTO bookmarks (?,?,?)', link, b, c)
-
-        }
-        res.forEach(element => {
-
-        });
-        db.run('INSERT INTO userbookmarks(?' + userid + ', ?' + ')')
-    })
-    client.index('pagecontents').addDocuments([{
-        //TODO: THIS ID IS FROM THE DB
-
-        id: 4,
-        url: url,
-        content: title + " " + description
-    }]).then(task => res.send(task.status))
-
-    let pagebody = req.body
-    client.index('pagecontents').addDocuments(dummy)
-        .then((res) => { console.log(res) })
-    client.index('pagecontents')
-        .updateFilterableAttributes([
-            'id',
-        ])
 
 })
 
