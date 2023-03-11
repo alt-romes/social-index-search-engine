@@ -2,13 +2,13 @@ const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fet
 //meilisearch
 const { MeiliSearch } = require('meilisearch')
 //test
+const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('./src/database/database.db', (err) => {
     if (err) {
         return console.error(err.message);
     }
     console.log('Connected to the disk SQlite database at ./src/database/database.db');
 });
-const sqlite3 = require('sqlite3').verbose();
 const dummy = require('../dummy.json')
 const express = require('express')
 const app = express()
@@ -34,7 +34,7 @@ app.post('/bookmark', (req, res) => {
         console.log("Title: " + title + "\nDesc: " + description)
         if (title == null || description == null) { return }
     })
-    db.all('SELECT * FROM bookmarks WHERE url =?' + link, (error, res) => {
+    db.all('SELECT * FROM bookmarks WHERE url =?', link, (error, res) => {
         if (res.length == 0) {
             db.run('INSERT INTO bookmarks (?,?,?)', link, b, c)
 
@@ -42,7 +42,7 @@ app.post('/bookmark', (req, res) => {
         res.forEach(element => {
 
         });
-        db.run('INSERT INTO userbookmarks(?' + userid + ', ?' + ')')
+        db.run('INSERT INTO userbookmarks(?, ?)', userid, link)
     })
     client.index('pagecontents').addDocuments([{
         //TODO: THIS ID IS FROM THE DB
