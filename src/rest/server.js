@@ -1,4 +1,5 @@
 const path = require('node:path');
+const { createHash } = require('crypto');
 const fs = require('fs');
 const jwt = require("jsonwebtoken");
 const TOKEN_KEY = "SampleText"
@@ -23,6 +24,10 @@ const searchPage = cheerio.load(fs.readFileSync('./frontend/search.html'));
 
 app.use(express.json())
 
+function hash(string) {
+    return createHash('sha256').update(string).digest('hex');
+}
+
 const client = new MeiliSearch({ host: 'http://localhost:7700' })
 client.index('pagecontents').addDocuments(dummy)
     .then((res) => { console.log(res) })
@@ -34,7 +39,7 @@ client.index('pagecontents')
 app.post('/user', (req, res) => {
     let username = req.query.username
     let email = req.query.email
-    let password = req.query.password
+    let password = hash(req.query.password)
     db.all('SELECT * FROM users WHERE name=?', username, (err, qres) => {
         if (qres.length != 0) {
             res.send('Username is already in use')
@@ -46,7 +51,7 @@ app.post('/user', (req, res) => {
 })
 app.put('/login', (req, res) => {
     let username = req.query.username
-    let password = req.query.password
+    let password = hash(req.query.password)
     db.all('SELECT * FROM users WHERE name =?', username, (error1, qres1) => {
         if (qres1.length == 0) {
             res.send('No user called ' + username + ' exists')
@@ -85,7 +90,7 @@ app.get('/index.js', (req, res) => {
 app.get('/search.js', (req, res) => {
     res.sendFile(path.join(__dirname, '../../frontend/search.js'));
 })
-app.get('/login.js', (req,res) =>{
+app.get('/login.js', (req, res) => {
     res.sendFile(path.join(__dirname, '../../frontend/login.js'))
 })
 app.get('/debug', (req, res) => {
