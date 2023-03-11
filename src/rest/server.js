@@ -137,7 +137,7 @@ app.get('/search', (req, res) => {
             rows2 = rows2.map(el => el.bid)
             rows2 = rows2.filter(el => el!=null)
             client.index('pagecontents').search(query, { filter: "id IN [" + rows2 + "]" }).then((results) => {
-                let completePage = searchPage.clone()
+                let completePage = searchPage.root().clone()
                 results.hits.forEach(result => {
                     completePage('#search-results').append(createArticle(result));
                 })
