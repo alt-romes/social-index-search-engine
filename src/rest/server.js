@@ -3,13 +3,13 @@ const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fet
 const { MeiliSearch } = require('meilisearch')
 //test
 const sqlite3 = require('sqlite3').verbose();
-let db = new sqlite3.Database('./src/database/database.db', (err) => {
+let db = new sqlite3.Database('../database/database.db', (err) => {
     if (err) {
         return console.error(err.message);
     }
     console.log('Connected to the disk SQlite database at ./src/database/database.db');
 });
-const dummy = require('../dummy.json')
+const dummy = require('../database/mielidb.json')
 const express = require('express')
 const app = express()
 const localport = 3000
@@ -29,7 +29,9 @@ app.post('/user', (req, res) => {
     db.run('INSERT INTO users (name, email) VALUES (?,?)', username, email);
     res.send('User created succesfully');
 })
-
+app.put('/login', (req, res) => {
+    let username
+})
 app.post('/bookmark', (req, res) => {
     let userid = req.query.user
     let link = req.body.link
