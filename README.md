@@ -4,10 +4,14 @@
 
 # Tazu (Your Social Search Engine
 
-Tazu (尋) in japanese means inquire, fathom, look for.
-This is the purpose of our work to not lose the information we have the desire to acquire.
+Tazu (尋) in japanese means inquire, to look for. 
+The purpose of our work is to not lose the information we have the desire to acquire.
 
 
-O APP Hacker é um projeto que tem o objetivo de promover e facilitar o desenvolvimento de aplicações simples.
+Do you have a lot of bookmarks accumulated? This might be the website you've been looking for.
 
-# social-index-search-engine
+This website allows you to create your own personalized search engine, where you can share with your friends and see what they have been curious about.
+
+We also created a mascot, a cat, because of the amount of curiosity we share with this animal.
+
+
