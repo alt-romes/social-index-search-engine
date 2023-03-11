@@ -69,6 +69,32 @@ app.put('/login', (req, res) => {
     })
 
 })
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/index.html'));
+})
+
+app.get('/style.css', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/style.css'));
+})
+
+app.get('/index.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/index.js'));
+})
+
+app.get('/search.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/search.js'));
+})
+app.get('/login.js', (req,res) =>{
+    res.sendFile(path.join(__dirname, '../../frontend/login.js'))
+})
+app.get('/debug', (req, res) => {
+    client.index('pagecontents').search("").then(data => { console.log("MEILI STATE:"); console.log(data) })
+    db.all('SELECT * FROM users', (error, result) => { console.log("USERS: "); result.forEach(el => { console.log(el) }) })
+    db.all('SELECT * FROM bookmarks', (error, result) => { console.log("BOOKMARKS "); result.forEach(el => console.log(el)) })
+    db.all('SELECT * FROM userbookmarks', (error, result) => { console.log("USERBOOKMARKS: "); result.forEach(el => { console.log(el) }) })
+    db.all('SELECT * FROM followers', (error, result) => { console.log("FOLLOWERS: "); result.forEach(el => { console.log(el) }) })
+
+})
 //WARNING everything after this function will require authentication
 app.use(function (req, res, next) {
     if (!req.headers.authorization) {
@@ -121,11 +147,11 @@ app.post('/bookmark', (req, res) => {
                         res.send("Insert failed")
                         return;
                     }
-                    db.all("SELECT last_insert_rowid() FROM bookmarks", (row_err, row_id) => { addContentLine(row_id[0]["last_insert_rowid()"], link, title, description, res,userID) })
+                    db.all("SELECT last_insert_rowid() FROM bookmarks", (row_err, row_id) => { addContentLine(row_id[0]["last_insert_rowid()"], link, title, description, res, userID) })
                 })
             }
             else {
-                addContentLine(qres[0].bid, link, title, description, res,userID)
+                addContentLine(qres[0].bid, link, title, description, res, userID)
             }
         })
     })
@@ -181,7 +207,7 @@ app.listen(localport, () => {
     console.log(`Example app listening on port ${localport}`)
 })
 
-function addContentLine(last_row, link, title, description, res,userID) {
+function addContentLine(last_row, link, title, description, res, userID) {
     db.all('SELECT * FROM userbookmarks WHERE bid=?', last_row, (err, rows) => {
         if (err != null) {
             res.send("userbookmarks failed")
@@ -199,38 +225,6 @@ function addContentLine(last_row, link, title, description, res,userID) {
     }]).then(task => { console.log("Adding record to meili\nID: " + last_row + "\nURL: " + link); res.send(task.status) })
 }
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../frontend/index.html'));
-})
-
-app.get('/style.css', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../frontend/style.css'));
-})
-
-app.get('/index.js', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../frontend/index.js'));
-})
-
-app.get('/search.js', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../frontend/search.js'));
-})
-<<<<<<< HEAD
-app.get('/debug',(req,res) =>{
-    client.index('pagecontents').search("").then(data => {console.log("MEILI STATE:");console.log(data)})
-    db.all('SELECT * FROM users', (error,result) =>{console.log("USERS: ");result.forEach(el =>{console.log(el)})})
-    db.all('SELECT * FROM bookmarks', (error,result) => {console.log("BOOKMARKS "); result.forEach(el => console.log(el))})
-    db.all('SELECT * FROM userbookmarks', (error,result) =>{console.log("USERBOOKMARKS: ");result.forEach(el =>{console.log(el)})})
-    db.all('SELECT * FROM followers', (error,result) =>{console.log("FOLLOWERS: ");result.forEach(el =>{console.log(el)})})
-    
-=======
-app.get('/debug', (req, res) => {
-    client.index('pagecontents').search("").then(data => { console.log("MEILI STATE:"); console.log(data) })
-    db.all('SELECT * FROM users', (error, result) => { console.log("USERS: "); result.forEach(el => { console.log(el) }) })
-    db.all('SELECT * FROM bookmarks', (error, result) => { console.log("BOOKMARKS "); result.forEach(el => console.log(el)) })
-    db.all('SELECT * FROM userbookmarks', (error, result) => { console.log("USERBOOKMARKS: "); result.forEach(el => { console.log(el) }) })
-    db.all('SELECT * FROM followers', (error, result) => { console.log("FOLLOWERS: "); result.forEach(el => { console.log(el) }) })
->>>>>>> f8c7b0add69b983c301d85c96adae28e84478424
-})
 
 function createArticle(result) {
     let url = result.url

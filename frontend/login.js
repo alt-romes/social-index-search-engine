@@ -1,12 +1,12 @@
 function login(url,username, password){
-    
+    putData(url+"?username=" +username+"&password=" + password,{}).then(data =>{return data})
 }
 
 
-async function postData(url = "", data = {}) {
+function putData(url = "", data = {}) {
     // Default options are marked with *
-    const response = await fetch(url, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+    return fetch(url, {
+      method: "PUT", // *GET, POST, PUT, DELETE, etc.
       mode: "cors", // no-cors, *cors, same-origin
       cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
       credentials: "same-origin", // include, *same-origin, omit
@@ -17,6 +17,5 @@ async function postData(url = "", data = {}) {
       redirect: "follow", // manual, *follow, error
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify(data), // body data type must match "Content-Type" header
-    });
-    return response.json(); // parses JSON response into native JavaScript objects
+    }).then(r => r.json());
   }
