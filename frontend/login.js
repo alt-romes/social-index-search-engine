@@ -100,7 +100,7 @@ function updateLoggedInStatus() {
             logInMsg.dataset.logged = true;
         }
         if (c1[0] == "userid"){
-            logInMsg.innerHTML = "User #"+c1[1]
+            logInMsg.innerHTML = "ID#"+c1[1]
         }
     })
 }
