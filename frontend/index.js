@@ -10,7 +10,10 @@ window.addEventListener("load", e => {
             console.log(reader.result);
             let regArray = reader.result.match(/HREF="(.*?)"/gm)
             regArray = regArray.map((el) =>{return el.substring(5).replaceAll("\"","")})
-            regArray.forEach((el) =>{addBookmark(el)})
+            regArray.forEach((el) =>{
+                if (el.startsWith("https://"))
+                    addBookmark(el);
+            })
             //regArray.forEach()
         });
 

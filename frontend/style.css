@@ -10,6 +10,7 @@ section {
 
 html,body {
     margin: 0;
+    overflow-x: hidden;
 }
 
 body {
@@ -269,5 +270,11 @@ input#search-bar:focus::placeholder {
 
 input#search-bar::placeholder {
     color: var(--whiteish);
+}
+
+@media only screen and (max-width: 600px) {
+  #about-main {
+      flex-direction: column;
+  }
 }
 
