@@ -66,7 +66,7 @@ app.put('/login', (req, res) => {
                     }
                 );
                 db.run('INSERT INTO tokens (jwt, uid) VALUES (?,?)', token, qres1.uid)
-                res.cookie('authcookie', token, { maxAge: 900000, httpOnly: false ,sameSite:'lax'})
+                res.cookie('authcookie', token, { maxAge: 900000, httpOnly: false, sameSite: 'lax' })
                 res.send({ "userid": qres1[0].uid, "jwt": token })
             } else {
                 res.send('Wrong password')
@@ -136,31 +136,31 @@ app.post('/bookmark', (req, res) => {
         console.log("userID: " + userID)
         let link = req.body.link
         let last_row = -1;
-    fetch(link).then(resp => resp.text()).then(data => {
-        let htmlParser = cheerio.load(data)
-        let title = htmlParser("head title").text()
-        let description = htmlParser("meta[name='description']").attr().content
-        console.log("Title: " + title + "\nDesc: " + description)
-        if (title == null || description == null) { res.send("Invalid website"); return; }
-        db.all('SELECT * FROM bookmarks WHERE url =?', link, (error, qres) => {
-            if (error != null) {
-                console.log(error)
-            }
-            if (qres.length == 0) {
-                db.run('INSERT INTO bookmarks (url) VALUES (?)', link, (err) => {
-                    if (err != null) {
-                        res.send("Insert failed")
-                        return;
-                    }
-                    db.all("SELECT last_insert_rowid() FROM bookmarks", (row_err, row_id) => { addContentLine(row_id[0]["last_insert_rowid()"], link, title, description, res, userID) })
-                })
-            }
-            else {
-                addContentLine(qres[0].bid, link, title, description, res, userID)
-            }
+        fetch(link).then(resp => resp.text()).then(data => {
+            let htmlParser = cheerio.load(data)
+            let title = htmlParser("head title").text()
+            let description = htmlParser("meta[name='description']").attr().content
+            console.log("Title: " + title + "\nDesc: " + description)
+            if (title == null || description == null) { res.send("Invalid website"); return; }
+            db.all('SELECT * FROM bookmarks WHERE url =?', link, (error, qres) => {
+                if (error != null) {
+                    console.log(error)
+                }
+                if (qres.length == 0) {
+                    db.run('INSERT INTO bookmarks (url) VALUES (?)', link, (err) => {
+                        if (err != null) {
+                            res.send("Insert failed")
+                            return;
+                        }
+                        db.all("SELECT last_insert_rowid() FROM bookmarks", (row_err, row_id) => { addContentLine(row_id[0]["last_insert_rowid()"], link, title, description, res, userID) })
+                    })
+                }
+                else {
+                    addContentLine(qres[0].bid, link, title, description, res, userID)
+                }
+            })
         })
-    })
-    
+
     })
 })
 
@@ -168,49 +168,49 @@ app.post('/follow', (req, res) => {
 
     let userID;
 
-    db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authorization.split(" ")[1], (err, qres) => {
+    db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authentication.split(" ")[1], (err, qres) => {
         userID = qres.user_id
-    })
-    targetuser = req.query.targetuser
-    db.all('SELECT * FROM users WHERE uid=?', user, (err, qres1) => {
-        console.log(qres1)
-        if (qres1.length == 0) {
-            res.send('You do not exist')
-        } else {
-            db.all('SELECT * FROM users WHERE uid=?', user, (err, qres2) => {
-                if (qres2.length == 0) {
-                    res.send('Target user does not exist')
-                } else {
-                    db.run('INSERT INTO followers (uidfollower, uidfollowed) VALUES  (?, ?)', user, targetuser)
-                    res.send('followed user! ' + targetuser)
-                }
-            })
-        }
+        targetuser = req.query.targetuser
+        db.all('SELECT * FROM users WHERE uid=?', userID, (err, qres1) => {
+            console.log(qres1)
+            if (qres1.length == 0) {
+                res.send('You do not exist')
+            } else {
+                db.all('SELECT * FROM users WHERE uid=?', user, (err, qres2) => {
+                    if (qres2.length == 0) {
+                        res.send('Target user does not exist')
+                    } else {
+                        db.run('INSERT INTO followers (uidfollower, uidfollowed) VALUES  (?, ?)', user, targetuser)
+                        res.send('followed user! ' + targetuser)
+                    }
+                })
+            }
+        })
     })
 })
 
 app.get('/search', (req, res) => {
     let userID;
-    db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authorization.split(" ")[1], (err, qres) => {
+    db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authentication.split(" ")[1], (err, qres) => {
         userID = qres.user_id
-    })
-    let query = req.query.query
-    db.all('SELECT uidfollowed FROM followers WHERE uidfollower =?', user, (err1, rows1) => {
-        rows1.push(user)
-        let id_string = "("
-        rows1.forEach((el) => { id_string = id_string.concat(el + ",") })
-        id_string = id_string.concat(")")
-        id_string = id_string.replace(",)", ")")
-        db.all('SELECT bid FROM userbookmarks WHERE uid IN ' + id_string, (err2, rows2) => {
-            rows2 = rows2.map(el => el.bid)
-            rows2 = rows2.filter(el => el != null)
-            client.index('pagecontents').search(query, { filter: "id IN [" + rows2 + "]" }).then((results) => {
-                let completePage = searchPage.root().clone()
-                results.hits.forEach(result => {
-                    completePage('#search-results').append(createArticle(result));
+        let query = req.query.query
+        db.all('SELECT uidfollowed FROM followers WHERE uidfollower =?', userID, (err1, rows1) => {
+            rows1.push(user)
+            let id_string = "("
+            rows1.forEach((el) => { id_string = id_string.concat(el + ",") })
+            id_string = id_string.concat(")")
+            id_string = id_string.replace(",)", ")")
+            db.all('SELECT bid FROM userbookmarks WHERE uid IN ' + id_string, (err2, rows2) => {
+                rows2 = rows2.map(el => el.bid)
+                rows2 = rows2.filter(el => el != null)
+                client.index('pagecontents').search(query, { filter: "id IN [" + rows2 + "]" }).then((results) => {
+                    let completePage = searchPage.root().clone()
+                    results.hits.forEach(result => {
+                        completePage('#search-results').append(createArticle(result));
+                    })
+                    console.log(completePage);
+                    res.send(completePage.html());
                 })
-                console.log(completePage);
-                res.send(completePage.html());
             })
         })
     })
