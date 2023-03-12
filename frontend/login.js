@@ -62,7 +62,12 @@ function postData(url = "", data = {}) {
     });
 }
 function signUp(username, email, password) {
-    postData("/user?username=" + username + "&email=" + email + "&password=" + password).then(setTimeout(()=>{login(username,password)},1000))
+    console.log(1)
+    postData("/user?username=" + username + "&email=" + email + "&password=" + password).then(() => {
+        setTimeout(() => {
+            login(username,password)
+        },200);
+    })
 }
 
 const navLinks = document.querySelector("#main-nav > .nav-links");
