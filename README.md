@@ -20,9 +20,12 @@ Easy access to your followers recent interests and an instant creation of a comm
 
 This project also enables any individual to create their own personalized search engine.
 
-Thus, some of the main features are:
+# Instructions
 
-- Personalized 
+The search bar has many functions:
+- Add a link through the insertion of a https:// link
+- Follow other users  with  'follow:[userID]'
+- Search your curiosities.
 
 
 # The website
