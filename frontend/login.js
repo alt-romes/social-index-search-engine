@@ -65,27 +65,8 @@ function signUp(username, email, password) {
     postData("/user?username=" + username + "&email=" + email + "&password=" + password).then(setTimeout(()=>{login(username,password)},1000))
 }
 
-const signUpButton = document.getElementById("sign-up-button");
-const loginButton = document.getElementById("login-button");
-const loginButtonA = document.querySelector("#login-button > a");
-const signUpButtonA = document.querySelector("#sign-up-button > a");
-
-loginButtonA.onclick = e => {
-    loginButton.dataset.active = loginButton.dataset.active == "true" ? "false" : "true";
-    if(loginButton.dataset.active == "true"){
-        signUpButton.dataset.active = "false"
-    } 
-}
-
-signUpButtonA.onclick = e => {
-    signUpButton.dataset.active = signUpButton.dataset.active == "true" ? "false" : "true";
-    if(signUpButton.dataset.active == "true"){
-        loginButton.dataset.active = "false"
-    } 
-}
-
 const navLinks = document.querySelector("#main-nav > .nav-links");
-const logInMsg = document.querySelector("#main-nav > .log-in-msg");
+const logInMsg = document.querySelector(".log-in-msg");
 
 window.addEventListener("load", e => {
     updateLoggedInStatus()
@@ -96,7 +77,8 @@ function updateLoggedInStatus() {
         let c1 = c.split("=");
         console.log(c)
         if (c1[0] == "authcookie") {
-            navLinks.dataset.logged = true;
+            if (navLinks)
+                navLinks.dataset.logged = true;
             logInMsg.dataset.logged = true;
         }
         if (c1[0] == "userid"){
@@ -105,3 +87,23 @@ function updateLoggedInStatus() {
     })
 }
 
+const signUpButton = document.getElementById("sign-up-button");
+const loginButton = document.getElementById("login-button");
+const loginButtonA = document.querySelector("#login-button > a");
+const signUpButtonA = document.querySelector("#sign-up-button > a");
+
+if (loginButtonA)
+    loginButtonA.onclick = e => {
+        loginButton.dataset.active = loginButton.dataset.active == "true" ? "false" : "true";
+        if(loginButton.dataset.active == "true"){
+            signUpButton.dataset.active = "false"
+        } 
+    }
+
+if (signUpButtonA)
+    signUpButtonA.onclick = e => {
+        signUpButton.dataset.active = signUpButton.dataset.active == "true" ? "false" : "true";
+        if(signUpButton.dataset.active == "true"){
+            loginButton.dataset.active = "false"
+        } 
+    }

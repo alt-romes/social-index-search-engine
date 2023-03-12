@@ -146,7 +146,7 @@ ul#history {
 #search-cat {
     position: absolute;
     right:0%;
-    bottom:-15%;
+    bottom:-10%;
     pointer-events: none;
 }
 
@@ -193,7 +193,7 @@ article.entry {
     align-items: flex-end;
     align-content: flex-end;
     justify-content: flex-end;
-    padding: 2em 3em;
+    padding: 2em 2em;
     position: absolute;
     width: 100%;
     right:0%;
@@ -234,20 +234,20 @@ article.entry {
     border-radius: 0.6em;
 }
 
-#main-nav #login-button.nav-item[data-active=true] {
+#login-button.nav-item[data-active=true] {
     background-color: var(--whiteish);
     color: var(--black);
 }
 
-#main-nav #login-button.nav-item[data-active=true] > a{
+#login-button.nav-item[data-active=true] > a{
     color: var(--black);
 }
-#main-nav #sign-up-button.nav-item[data-active=true] {
+#sign-up-button.nav-item[data-active=true] {
     background-color: var(--whiteish);
     color: var(--black);
 }
 
-#main-nav #sign-up-button.nav-item[data-active=true] > a{
+#sign-up-button.nav-item[data-active=true] > a{
     color: var(--black);
 }
 
@@ -258,4 +258,6 @@ article.entry {
 .log-in-msg[data-logged=false] {
     display: none;
 }
+
+
 
