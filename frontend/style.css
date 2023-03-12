@@ -263,4 +263,11 @@ article.entry {
     color: var(--whiteish);
 }
 
+input#search-bar:focus::placeholder {
+    color: var(--black);
+}
+
+input#search-bar::placeholder {
+    color: var(--whiteish);
+}
 
