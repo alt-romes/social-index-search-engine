@@ -30,7 +30,7 @@ function hash(string) {
     return createHash('sha256').update(string).digest('hex');
 }
 
-const client = new MeiliSearch({ host: 'http://localhost:7700' })
+const client = new MeiliSearch({ host: process.env.PG_HOST+':7700' })
 client.index('pagecontents').addDocuments(dummy)
     .then((res) => { console.log(res) })
 client.index('pagecontents')
