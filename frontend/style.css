@@ -259,5 +259,8 @@ article.entry {
     display: none;
 }
 
+.log-in-msg {
+    color: var(--whiteish);
+}
 
 
