@@ -1,17 +1,26 @@
 
-function login(url, username, password) {
-    putData(url + "?username=" + username + "&password=" + password, {}).then(data => { return data; })
+function login(username, password) {
+    putData("/login?username=" + username + "&password=" + password, {}).then(data => { return data; })
 }
 
-function signUpOrLogin(event) {
-    let allInputs = event.target.elements
-    console.log(allInputs)
-    let activeInputs = ""
-    allInputs.forEach(el => {
-        if (el.id == "login" && el.value ) {
-            
-        }
-    })
+function signUpForm(event){
+    let username = event.target.elements.signup.value
+    let email = event.target.elements.email.value
+    let password = event.target.elements.password.value
+    if(username == "" || email == "" || password == ""){
+        return;
+    }
+    console.log("Sign Up done with: " + username + " " + email + " " + password)
+    signUp(username,email,password)
+}
+function loginForm(event){
+    let username = event.target.elements.login.value
+    let password = event.target.elements.password.value
+    if(username == "" || password == ""){
+        return;
+    }
+    console.log("Login done with: " + username + " " + password)
+    login(username,password)
 }
 
 
@@ -63,9 +72,15 @@ const signUpButtonA = document.querySelector("#sign-up-button > a");
 
 loginButtonA.onclick = e => {
     loginButton.dataset.active = loginButton.dataset.active == "true" ? "false" : "true";
+    if(loginButton.dataset.active == "true"){
+        signUpButton.dataset.active = "false"
+    } 
 }
 
 signUpButtonA.onclick = e => {
     signUpButton.dataset.active = signUpButton.dataset.active == "true" ? "false" : "true";
+    if(signUpButton.dataset.active == "true"){
+        loginButton.dataset.active = "false"
+    } 
 }
 

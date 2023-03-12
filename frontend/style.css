@@ -242,4 +242,12 @@ article.entry {
 #main-nav #login-button.nav-item[data-active=true] > a{
     color: var(--black);
 }
+#main-nav #sign-up-button.nav-item[data-active=true] {
+    background-color: var(--whiteish);
+    color: var(--black);
+}
+
+#main-nav #sign-up-button.nav-item[data-active=true] > a{
+    color: var(--black);
+}
 
