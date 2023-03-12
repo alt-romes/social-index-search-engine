@@ -1,5 +1,18 @@
 window.addEventListener("load", e => {
 
+    const input = document.querySelector('input[type="file"]'); // select the input element with type="file"
+    input.addEventListener('change', function () {
+        const file = this.files[0]; // get the selected file
+        const reader = new FileReader();
+
+        reader.addEventListener('load', function () {
+            // do something with the loaded data
+            console.log(reader.result);
+        });
+
+        reader.readAsText(file); // read the file as text
+    });
+
     let main = document.getElementById("history")
     let books = [
         {
@@ -8,21 +21,24 @@ window.addEventListener("load", e => {
             description: "Interpreters   Good programmers decompose data from the interpreter that processes that data.  Compilers exemplify this approach, where they..."
         },
         {
-            title:"Building A Virtual Machine inside ChatGPT",
-            url:"https://www.engraved.blog/building-a-virtual-machine-inside/",
-            description:"Unless you have been living under a rock, you have heard of this new ChatGPT assistant made by OpenAI..."},
+            title: "Building A Virtual Machine inside ChatGPT",
+            url: "https://www.engraved.blog/building-a-virtual-machine-inside/",
+            description: "Unless you have been living under a rock, you have heard of this new ChatGPT assistant made by OpenAI..."
+        },
         {
-            title:"How do non-euclidean games work?",
-            url:"https://www.youtube.com/watch?v=lFEIUcXCEvI",
-            description:"I'm a professional programmer who works on games, web and VR/AR applications."},
+            title: "How do non-euclidean games work?",
+            url: "https://www.youtube.com/watch?v=lFEIUcXCEvI",
+            description: "I'm a professional programmer who works on games, web and VR/AR applications."
+        },
         {
-            title:"Núcleo de Informática | AEFCT UNL",
-            url:"https://ae.fct.unl.pt/n-inf/",
-            description:"Site do Núcleo de Informática da SST-UNL"},
+            title: "Núcleo de Informática | AEFCT UNL",
+            url: "https://ae.fct.unl.pt/n-inf/",
+            description: "Site do Núcleo de Informática da SST-UNL"
+        },
     ]
 
     for (let i = 0; i < 4; i++) {
-        addEntry(main,books[i])
+        addEntry(main, books[i])
     }
 
 })
@@ -41,7 +57,7 @@ function createEntry(title, description, link) {
     header.classList.add("header");
 
     let ico = document.createElement("img");
-    ico.src = "https://" +domain + "/favicon.ico" 
+    ico.src = "https://" + domain + "/favicon.ico"
     ico.style.width = "18px";
     ico.style.height = "18px";
     ico.classList.add("title");
@@ -84,4 +100,5 @@ function parseDomain(url) {
     let domain = matches && matches[1];  // domain will be null if no match is found
     return domain
 }
+    
 
