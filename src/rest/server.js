@@ -203,12 +203,17 @@ app.get('/search', (req, res) => {
         userID = qres[0].uid
         let query = req.query.query
         db.all('SELECT uidfollowed FROM followers WHERE uidfollower =?', userID, (err1, rows1) => {
+            console.log(rows1)
+            rows1 = rows1.map(el => el.uidfollowed)
             rows1.push(userID)
+            console.log(rows1)
             let id_string = "("
-            rows1.forEach((el) => { id_string = id_string.concat(el + ",") })
+            rows1.forEach((el) => { id_string = id_string.concat("?,") })
             id_string = id_string.concat(")")
             id_string = id_string.replace(",)", ")")
-            db.all('SELECT bid FROM userbookmarks WHERE uid IN ' + id_string, (err2, rows2) => {
+            console.log(id_string)
+            db.all('SELECT bid FROM userbookmarks WHERE uid IN ' + id_string, rows1, (err2, rows2) => {
+                console.log(rows2)
                 rows2 = rows2.map(el => el.bid)
                 rows2 = rows2.filter(el => el != null)
                 client.index('pagecontents').search(query, { filter: "id IN [" + rows2 + "]" }).then((results) => {
