@@ -136,14 +136,14 @@ app.post('/bookmark', (req, res) => {
     let userID;
 
     db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authentication.split(" ")[1], (err, qres) => {
-        userID = qres.user_id
+        userID = qres[0].uid
         console.log("userID: " + userID)
         let link = req.body.link
         let last_row = -1;
         fetch(link).then(resp => resp.text()).then(data => {
             let htmlParser = cheerio.load(data)
             let title = htmlParser("head title").text()
-            let description = htmlParser("meta[name='description']").attr().content
+            let description = htmlParser("meta[name='description']").attr()?.content??""
             console.log("Title: " + title + "\nDesc: " + description)
             if (title == null || description == null) { res.status(400).send("Invalid website"); return; }
             db.all('SELECT * FROM bookmarks WHERE url =?', link, (error, qres) => {
@@ -212,7 +212,7 @@ app.get('/search', (req, res) => {
                 rows2 = rows2.map(el => el.bid)
                 rows2 = rows2.filter(el => el != null)
                 client.index('pagecontents').search(query, { filter: "id IN [" + rows2 + "]" }).then((results) => {
-                    let completePage = searchPage.root().clone()
+                    let completePage = cheerio.load(searchPage.root().html())
                     results.hits.forEach(result => {
                         completePage('#search-results').append(createArticle(result));
                     })
