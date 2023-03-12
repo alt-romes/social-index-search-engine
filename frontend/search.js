@@ -8,7 +8,12 @@ searchBar.addEventListener("keyup", event => {
     switch (event.key) {
         case "Enter":
             console.log("Enter: " + searchBar.value)
-            search(searchBar.value)
+            if (searchBar.value.startsWith("https://")) {
+                addBookmark(searchBar.value);
+            }
+            else {
+                search(searchBar.value);
+            }
             break;
     }
 
@@ -23,6 +28,7 @@ function search(val) {
 function follow() {
 
 }
+
 function addBookmark(url){
   postData("/bookmark",{link:url}).then(data =>{console.log(data)})
 }

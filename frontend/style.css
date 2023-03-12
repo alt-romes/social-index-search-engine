@@ -188,5 +188,58 @@ article.entry {
     margin-bottom: 1.5em;
 }
 
+#main-nav {
+    display:flex;
+    align-items: flex-end;
+    align-content: flex-end;
+    justify-content: flex-end;
+    padding: 2em 3em;
+    position: absolute;
+    width: 100%;
+    right:0%;
+    top:0%;
+}
 
+#login-button[data-active=false] > form, #sign-up-button[data-active=false] > form {
+    display: none;
+}
+
+#login-button[data-active=true] > form, #sign-up-button[data-active=true] > form {
+    display: block;
+    position: relative;
+
+    border-radius: 0.6em;
+
+    padding: 1em 2em;
+
+    text-align: left;
+}
+
+#login-button[data-active=true] > form label, #sign-up-button[data-active=true] > form label {
+    color: var(--black);
+}
+
+#login-button[data-active=true] > form input, #sign-up-button[data-active=true] > form input{
+    width: 94%;
+    margin-bottom: 0.5em;
+    border-radius: 0.6em;
+    /* border-color: var(--black); */
+    padding: 0.2em 0.5em;
+}
+
+#main-nav .nav-item {
+    /* border: 1px solid var(--whiteish); */
+    padding: 0.6em 0.4em; 
+    outline: var(--whiteish);
+    border-radius: 0.6em;
+}
+
+#main-nav #login-button.nav-item[data-active=true] {
+    background-color: var(--whiteish);
+    color: var(--black);
+}
+
+#main-nav #login-button.nav-item[data-active=true] > a{
+    color: var(--black);
+}
 

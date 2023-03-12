@@ -39,9 +39,22 @@ function postData(url = "", data = {}) {
         redirect: "follow", // manual, *follow, error
         referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
         body: JSON.stringify(data), // body data type must match "Content-Type" header
-    })
-        ;
+    });
 }
 function signUp(username, email, password) {
     postData("/user?username=" + username + "&email=" + email + "&password=" + password).then(login("/login", username, password))
 }
+
+const signUpButton = document.getElementById("sign-up-button");
+const loginButton = document.getElementById("login-button");
+const loginButtonA = document.querySelector("#login-button > a");
+const signUpButtonA = document.querySelector("#sign-up-button > a");
+
+loginButtonA.onclick = e => {
+    loginButton.dataset.active = loginButton.dataset.active == "true" ? "false" : "true";
+}
+
+signUpButtonA.onclick = e => {
+    signUpButton.dataset.active = signUpButton.dataset.active == "true" ? "false" : "true";
+}
+
