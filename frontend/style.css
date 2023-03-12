@@ -15,7 +15,7 @@ html,body {
 body {
     /* background-color: #E2F0FE; */
     font-weight: 500;
-    font-family: 'Futura';
+    font-family: 'Futura', 'Rubik', sans-serif;
     /* scroll-snap-type: y mandatory; */
 }
 
@@ -42,7 +42,7 @@ section:nth-of-type(2n) {
 }
 
 #search-bar {
-    font-family: 'Futura';
+    font-family: 'Futura', 'Rubik', sans-serif;
     border: none;
     border-radius: 0.6em;
     padding: 1em 1em;
@@ -249,5 +249,13 @@ article.entry {
 
 #main-nav #sign-up-button.nav-item[data-active=true] > a{
     color: var(--black);
+}
+
+.nav-links[data-logged=true] {
+    display: none;
+}
+
+.log-in-msg[data-logged=false] {
+    display: none;
 }
 

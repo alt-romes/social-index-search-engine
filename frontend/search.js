@@ -9,11 +9,21 @@ searchBar.addEventListener("keyup", event => {
         case "Enter":
             console.log("Enter: " + searchBar.value)
             if (searchBar.value.startsWith("https://")) {
-                addBookmark(searchBar.value);
+                addBookmark(searchBar.value).then(r => {
+                    searchBar.placeholder = "Successfully added bookmark"
+                });
+                searchBar.value = ""
             }
             else if (searchBar.value.startsWith("follow:")) {
                 console.log("Trying to follow user " + searchBar.value)
-                follow(searchBar.value.substring(7))
+                follow(searchBar.value.substring(7)).then(r => {
+                    searchBar.placeholder = `Successfully followed user ${searchBar.value.split(":")[1]}!`
+                    searchBar.value = ""
+                }).catch(e => {
+                    searchBar.placeholder = `Failed to follow user ${searchBar.value.split(":")[1]}!`
+                    console.error(e);
+                    searchBar.value = ""
+                })
             }
             else {
                 search(searchBar.value);
@@ -31,13 +41,10 @@ function search(val) {
 
 function follow(val) {
     if (parseInt(val) == undefined) { return }
-    postData("/follow?targetuser=" + val, {})
-
+    return postData("/follow?targetuser=" + val, {})
 }
 
 function addBookmark(url) {
-    postData("/bookmark", { link: url }).then(data => { console.log(data) })
+    return postData("/bookmark", { link: url }).then(data => { console.log(data) })
 }
-
-
 
