@@ -70,6 +70,7 @@ app.put('/login', (req, res) => {
                 );
                 db.run('INSERT INTO tokens (jwt, uid) VALUES (?,?)', token, qres1[0].uid)
                 res.cookie('authcookie', token, { maxAge: 900000, httpOnly: false, sameSite: 'lax' })
+                res.cookie('userid', qres1[0].uid,{maxAge:90000,httpOnly:false,sameSite:'lax'})
                 res.send({ "userid": qres1[0].uid, "jwt": token })
             } else {
                 res.status(403).send('Wrong password')

@@ -94,9 +94,13 @@ window.addEventListener("load", e => {
 function updateLoggedInStatus() {
     document.cookie.split("; ").forEach(c => {
         let c1 = c.split("=");
+        console.log(c)
         if (c1[0] == "authcookie") {
             navLinks.dataset.logged = true;
             logInMsg.dataset.logged = true;
+        }
+        if (c1[0] == "userid"){
+            logInMsg.innerHTML = "User #"+c1[1]
         }
     })
 }
