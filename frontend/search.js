@@ -11,9 +11,9 @@ searchBar.addEventListener("keyup", event => {
             if (searchBar.value.startsWith("https://")) {
                 addBookmark(searchBar.value);
             }
-            else if (searchBar.value.startsWith("follow://")) {
+            else if (searchBar.value.startsWith("follow:")) {
                 console.log("Trying to follow user " + searchBar.value)
-                follow(searchBar.value)
+                follow(searchBar.value.substring(7))
             }
             else {
                 search(searchBar.value);

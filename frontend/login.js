@@ -62,8 +62,7 @@ function postData(url = "", data = {}) {
     });
 }
 function signUp(username, email, password) {
-    postData("/user?username=" + username + "&email=" + email + "&password=" + password).then(login("/login", username, password))
-}
+    postData("/user?username=" + username + "&email=" + email + "&password=" + password).then(setTimeout(()=>{login(username,password)},1000))}
 
 const signUpButton = document.getElementById("sign-up-button");
 const loginButton = document.getElementById("login-button");

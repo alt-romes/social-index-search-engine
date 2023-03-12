@@ -42,7 +42,7 @@ app.post('/user', (req, res) => {
     let password = hash(req.query.password)
     db.all('SELECT * FROM users WHERE name=?', username, (err, qres) => {
         if (qres.length != 0) {
-            res.send('Username is already in use')
+            res.status(400).send('Username is already in use')
         } else {
             db.run('INSERT INTO users (name, email, password) VALUES (?,?,?)', username, email, password);
             res.send('User created succesfully');
@@ -54,22 +54,23 @@ app.put('/login', (req, res) => {
     let password = hash(req.query.password)
     db.all('SELECT * FROM users WHERE name =?', username, (error1, qres1) => {
         if (qres1.length == 0) {
-            res.send('No user called ' + username + ' exists')
+            res.status(400).send('No user called ' + username + ' exists')
         } else {
+            console.log(qres1)
             //db.all('SELECT * FROM users WHERE password=?', password, (error2, qres2) => {
             if (qres1[0].password == password) {
                 const token = jwt.sign(
-                    { user_id: qres1.uid },
+                    { user_id: qres1[0].uid },
                     TOKEN_KEY,
                     {
                         expiresIn: "2h",
                     }
                 );
-                db.run('INSERT INTO tokens (jwt, uid) VALUES (?,?)', token, qres1.uid)
+                db.run('INSERT INTO tokens (jwt, uid) VALUES (?,?)', token, qres1[0].uid)
                 res.cookie('authcookie', token, { maxAge: 900000, httpOnly: false, sameSite: 'lax' })
                 res.send({ "userid": qres1[0].uid, "jwt": token })
             } else {
-                res.send('Wrong password')
+                res.status(403).send('Wrong password')
             }
         }
     })
@@ -141,7 +142,7 @@ app.post('/bookmark', (req, res) => {
             let title = htmlParser("head title").text()
             let description = htmlParser("meta[name='description']").attr().content
             console.log("Title: " + title + "\nDesc: " + description)
-            if (title == null || description == null) { res.send("Invalid website"); return; }
+            if (title == null || description == null) { res.status(400).send("Invalid website"); return; }
             db.all('SELECT * FROM bookmarks WHERE url =?', link, (error, qres) => {
                 if (error != null) {
                     console.log(error)
@@ -149,7 +150,7 @@ app.post('/bookmark', (req, res) => {
                 if (qres.length == 0) {
                     db.run('INSERT INTO bookmarks (url) VALUES (?)', link, (err) => {
                         if (err != null) {
-                            res.send("Insert failed")
+                            res.status(400).send("Insert failed")
                             return;
                         }
                         db.all("SELECT last_insert_rowid() FROM bookmarks", (row_err, row_id) => { addContentLine(row_id[0]["last_insert_rowid()"], link, title, description, res, userID) })
@@ -167,20 +168,23 @@ app.post('/bookmark', (req, res) => {
 app.post('/follow', (req, res) => {
 
     let userID;
-
     db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authentication.split(" ")[1], (err, qres) => {
-        userID = qres.user_id
+        if(qres.length == 0){
+            res.status(403).send("AuthToken not found")
+        }
+        console.log(qres)
+        userID = qres[0].uid
         targetuser = req.query.targetuser
         db.all('SELECT * FROM users WHERE uid=?', userID, (err, qres1) => {
-            console.log(qres1)
+            console.log(qres1,userID)
             if (qres1.length == 0) {
-                res.send('You do not exist')
+                res.status(400).send('You do not exist')
             } else {
-                db.all('SELECT * FROM users WHERE uid=?', user, (err, qres2) => {
+                db.all('SELECT * FROM users WHERE uid=?', targetuser, (err, qres2) => {
                     if (qres2.length == 0) {
-                        res.send('Target user does not exist')
+                        res.status(400).send('Target user does not exist')
                     } else {
-                        db.run('INSERT INTO followers (uidfollower, uidfollowed) VALUES  (?, ?)', user, targetuser)
+                        db.run('INSERT INTO followers (uidfollower, uidfollowed) VALUES  (?, ?)', userID, targetuser)
                         res.send('followed user! ' + targetuser)
                     }
                 })
@@ -223,7 +227,7 @@ app.listen(localport, () => {
 function addContentLine(last_row, link, title, description, res, userID) {
     db.all('SELECT * FROM userbookmarks WHERE bid=?', last_row, (err, rows) => {
         if (err != null) {
-            res.send("userbookmarks failed")
+            res.status(400).send("userbookmarks failed")
         }
         if (rows.length == 0) {
             db.run('INSERT INTO userbookmarks (bid,uid) VALUES (?,?)', last_row, userID)
