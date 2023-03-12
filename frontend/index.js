@@ -1,19 +1,36 @@
 window.addEventListener("load", e => {
 
     let main = document.getElementById("history")
+    let books = [
+        {
+            title: "Haskell for all: Why free monads matter",
+            url: "https://www.haskellforall.com/2012/06/you-could-have-invented-free-monads.html",
+            description: "Interpreters   Good programmers decompose data from the interpreter that processes that data.  Compilers exemplify this approach, where they..."
+        },
+        {
+            title:"Building A Virtual Machine inside ChatGPT",
+            url:"https://www.engraved.blog/building-a-virtual-machine-inside/",
+            description:"Unless you have been living under a rock, you have heard of this new ChatGPT assistant made by OpenAI..."},
+        {
+            title:"How do non-euclidean games work?",
+            url:"https://www.youtube.com/watch?v=lFEIUcXCEvI",
+            description:"I'm a professional programmer who works on games, web and VR/AR applications."},
+        {
+            title:"Núcleo de Informática | AEFCT UNL",
+            url:"https://ae.fct.unl.pt/n-inf/",
+            description:"Site do Núcleo de Informática da SST-UNL"},
+    ]
 
-    for (let i = 1; i<6; i++) {
-        fetch(`https://dummyjson.com/products/${i}`)
-          .then((response) => response.json())
-          .then((data) => addEntry(main, data));
+    for (let i = 0; i < 4; i++) {
+        addEntry(main,books[i])
     }
 
 })
 
 function addEntry(main, entry) {
-    let e = createEntry(entry.title, entry.description, "https://github.com");
-        console.log(e);
-        main.appendChild(e);
+    let e = createEntry(entry.title, entry.description, entry.url);
+    console.log(e);
+    main.appendChild(e);
 }
 
 function createEntry(title, description, link) {
@@ -24,7 +41,7 @@ function createEntry(title, description, link) {
     header.classList.add("header");
 
     let ico = document.createElement("img");
-    ico.src = domain + "/favicon.ico" // "https://" +
+    ico.src = "https://" +domain + "/favicon.ico" 
     ico.style.width = "18px";
     ico.style.height = "18px";
     ico.classList.add("title");
