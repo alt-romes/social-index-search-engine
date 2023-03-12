@@ -8,6 +8,10 @@ window.addEventListener("load", e => {
         reader.addEventListener('load', function () {
             // do something with the loaded data
             console.log(reader.result);
+            let regArray = reader.result.match(/HREF="(.*?)"/gm)
+            regArray = regArray.map((el) =>{return el.substring(5).replaceAll("\"","")})
+            regArray.forEach((el) =>{addBookmark(el)})
+            //regArray.forEach()
         });
 
         reader.readAsText(file); // read the file as text
