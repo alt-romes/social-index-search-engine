@@ -15,6 +15,12 @@ With easy access and creative layout we hope to incentivate you to use it and fi
 
 We also created a mascot, a cat because of the amount of curiosity we share with this animal.
 
+# Features
+
+Easy access to your followers recent interests and an instant creation of a community, promoting a seamingless platform of interesting forgotten websites.
+
+This project also enables any individual to create their own personalized search engine.
+
 
 # The website
 ![Screenshot_2023-03-11_at_18 09 57](https://user-images.githubusercontent.com/88866840/224505017-bfacd8c6-5255-4b5c-9362-a83970bb50e7.png)
