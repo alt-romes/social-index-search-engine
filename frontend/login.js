@@ -1,6 +1,6 @@
 
 function login(username, password) {
-    putData("/login?username=" + username + "&password=" + password, {}).then(data => { return data; })
+    return putData("/login?username=" + username + "&password=" + password, {}).then(data => { updateLoggedInStatus(); return data; });
 }
 
 function signUpForm(event){
@@ -20,7 +20,7 @@ function loginForm(event){
         return;
     }
     console.log("Login done with: " + username + " " + password)
-    login(username,password)
+    return login(username,password)
 }
 
 
@@ -62,7 +62,8 @@ function postData(url = "", data = {}) {
     });
 }
 function signUp(username, email, password) {
-    postData("/user?username=" + username + "&email=" + email + "&password=" + password).then(setTimeout(()=>{login(username,password)},1000))}
+    postData("/user?username=" + username + "&email=" + email + "&password=" + password).then(setTimeout(()=>{login(username,password)},1000))
+}
 
 const signUpButton = document.getElementById("sign-up-button");
 const loginButton = document.getElementById("login-button");
@@ -81,5 +82,22 @@ signUpButtonA.onclick = e => {
     if(signUpButton.dataset.active == "true"){
         loginButton.dataset.active = "false"
     } 
+}
+
+const navLinks = document.querySelector("#main-nav > .nav-links");
+const logInMsg = document.querySelector("#main-nav > .log-in-msg");
+
+window.addEventListener("load", e => {
+    updateLoggedInStatus()
+})
+
+function updateLoggedInStatus() {
+    document.cookie.split("; ").forEach(c => {
+        let c1 = c.split("=");
+        if (c1[0] == "authcookie") {
+            navLinks.dataset.logged = true;
+            logInMsg.dataset.logged = true;
+        }
+    })
 }
 

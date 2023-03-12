@@ -1,4 +1,4 @@
-window.onload = e => {
+window.addEventListener("load", e => {
 
     let main = document.getElementById("history")
 
@@ -8,7 +8,7 @@ window.onload = e => {
           .then((data) => addEntry(main, data));
     }
 
-}
+})
 
 function addEntry(main, entry) {
     let e = createEntry(entry.title, entry.description, "https://github.com");
