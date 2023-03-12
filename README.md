@@ -1,6 +1,8 @@
 
 This project was developed for Winter Hackathon 2023 hosted by FCT Núcleo de Informática.
 
+The website: http://tazu.site/
+
 # Tazu (Your Social Search Engine)
 
 Tazu (尋) in japanese means inquire, to look for. 
