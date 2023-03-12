@@ -1,6 +1,17 @@
 
 function login(url, username, password) {
-    putData(url + "?username=" + username + "&password=" + password, {}).then(data => {return data; })
+    putData(url + "?username=" + username + "&password=" + password, {}).then(data => { return data; })
+}
+
+function signUpOrLogin(event) {
+    let allInputs = event.target.elements
+    console.log(allInputs)
+    let activeInputs = ""
+    allInputs.forEach(el => {
+        if (el.id == "login" && el.value ) {
+            
+        }
+    })
 }
 
 
@@ -21,9 +32,9 @@ function putData(url = "", data = {}) {
     });
 }
 function postData(url = "", data = {}) {
-    let cookies =document.cookie.split("; ")
+    let cookies = document.cookie.split("; ")
     let auth_cookie = ""
-    cookies.forEach(el =>{let s = el.split("="); if(s[0] == "authcookie"){auth_cookie = s[1]}})
+    cookies.forEach(el => { let s = el.split("="); if (s[0] == "authcookie") { auth_cookie = s[1] } })
 
     // Default options are marked with *
     return fetch(url, {

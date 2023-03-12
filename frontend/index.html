@@ -14,16 +14,32 @@
                 <ul class="nav-links">
                     <li class="nav-item" id="login-button" data-active=false style="text-align:right">
                         <a href="#" >Login</a>
-                        <form>
+                        <form onsubmit="loginFromForm(event)">
                             <div>
                                 <label for="login">Username</label>
                                 <input id="login" label="login" type="text" placeholder="">
-                            </div>
-                            <div>
+                              </div>
+                              <div>
                                 <label for="password">Password</label>
                                 <input id="password" label="password" type="password">
+                                <input type="submit" style="display:none">
                             </div>
                         </form>
+                        <form onsubmit="signUpFromForm(event)">
+                          <div>
+                              <label for="signup">Username</label>
+                              <input id="signup" label="login" type="text" placeholder="">
+                            </div>
+                          <div>
+                            <label for="email">E-mail</label>
+                            <input id ="email" label="email" type="text" placeholder="">
+                          </div>
+                            <div>
+                              <label for="password">Password</label>
+                              <input id="password" label="password" type="password">
+                              <input type="submit" style="display:none">
+                          </div>
+                      </form>
                     </li>
                     <li class="nav-item" id="sign-up-button" data-active=false style="text-align:right">
                         <a href="#" >Sign up</a>
@@ -49,9 +65,6 @@
                     </svg>
                 </div>
             </main>
-            <button onclick="login('/login','ooga','1234')" data-active=false>Sign In</button>
-
-            <button onclick="addBookmark('https://www.youtube.com')" data-active=false>Add Bookmark</button>
         </section>
         <section>
             <main id="history-main">
