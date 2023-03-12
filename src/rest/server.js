@@ -4,6 +4,7 @@ const fs = require('fs');
 const jwt = require("jsonwebtoken");
 const TOKEN_KEY = "SampleText"
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+const cookieParser = require('cookie-parser')
 //meilisearch
 const { MeiliSearch } = require('meilisearch')
 //test
@@ -23,6 +24,7 @@ const localport = 3000
 const searchPage = cheerio.load(fs.readFileSync('./frontend/search.html'));
 
 app.use(express.json())
+app.use(cookieParser())
 
 function hash(string) {
     return createHash('sha256').update(string).digest('hex');
@@ -104,10 +106,11 @@ app.get('/debug', (req, res) => {
 })
 //WARNING everything after this function will require authentication
 app.use(function (req, res, next) {
-    if (!req.headers.authentication) {
+    console.log(req.cookies)
+    if (!req.headers.authentication && !req.cookies.authcookie) {
         return res.status(403).json({ error: 'No credentials sent!' });
     } else {
-        db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authentication.split(" ")[1], (err, qres) => {
+        db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authentication?.split(" ")[1]??req.cookies.authcookie, (err, qres) => {
             if (qres.length == 0) {
                 return res.status(401).json({ error: 'Invalid Token' });
             } else {
@@ -195,11 +198,12 @@ app.post('/follow', (req, res) => {
 
 app.get('/search', (req, res) => {
     let userID;
-    db.all('SELECT * FROM tokens WHERE jwt=?', req.headers.authentication.split(" ")[1], (err, qres) => {
-        userID = qres.user_id
+    console.log(req.cookies)
+    db.all('SELECT * FROM tokens WHERE jwt=?', req.cookies.authcookie, (err, qres) => {
+        userID = qres[0].uid
         let query = req.query.query
         db.all('SELECT uidfollowed FROM followers WHERE uidfollower =?', userID, (err1, rows1) => {
-            rows1.push(user)
+            rows1.push(userID)
             let id_string = "("
             rows1.forEach((el) => { id_string = id_string.concat(el + ",") })
             id_string = id_string.concat(")")
@@ -213,7 +217,8 @@ app.get('/search', (req, res) => {
                         completePage('#search-results').append(createArticle(result));
                     })
                     console.log(completePage);
-                    res.send(completePage.html());
+                    
+                    res.set('Cache-control','no-store').send(completePage.html());
                 })
             })
         })

@@ -26,7 +26,7 @@ searchBar.addEventListener("keyup", event => {
 
 
 function search(val) {
-    window.location.href = `${window.location.protocol}//${window.location.host}/search?user=1&query=${encodeURIComponent(val)}`;
+    window.location.href = `${window.location.protocol}//${window.location.host}/search?query=${encodeURIComponent(val)}`;
 }
 
 function follow(val) {
