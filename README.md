@@ -1,6 +1,5 @@
-# Demo
 
-(youtube link)
+This project was developed for Winter Hackathon 2023 hostes by FCT Núcleo de Informática.
 
 # Tazu (Your Social Search Engine)
 
@@ -20,6 +19,10 @@ We also created a mascot, a cat because of the amount of curiosity we share with
 Easy access to your followers recent interests and an instant creation of a community, promoting a seamingless platform of interesting forgotten websites.
 
 This project also enables any individual to create their own personalized search engine.
+
+Thus, some of the main features are:
+
+- Personalized 
 
 
 # The website
