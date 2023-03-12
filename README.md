@@ -1,5 +1,5 @@
 
-This project was developed for Winter Hackathon 2023 hostes by FCT Núcleo de Informática.
+This project was developed for Winter Hackathon 2023 hosted by FCT Núcleo de Informática.
 
 # Tazu (Your Social Search Engine)
 
@@ -10,13 +10,13 @@ The purpose of our work is to not lose the information we have the desire to acq
 Do you have a lot of bookmarks accumulated? This might be the website you've been looking for.
 
 This website allows you to create your own personalized search engine, where you can share your bookmarks with your friends and see what they have been curious about.
-With easy access and creative layout we hope to incentivate you to use it and find a new organized home for your favorite websites.
+With easy access and creative layout, where you can find a new organized home for your favorite websites.
 
 We also created a mascot, a cat because of the amount of curiosity we share with this animal.
 
 # Features
 
-Easy access to your followers recent interests and an instant creation of a community, promoting a seamingless platform of interesting forgotten websites.
+Easy access to your followers recent interests and an instant creation of a community, promoting a simple platform where reside all your interesting forgotten websites.
 
 This project also enables any individual to create their own personalized search engine.
 
