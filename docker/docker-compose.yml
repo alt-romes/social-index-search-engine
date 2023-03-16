@@ -7,7 +7,7 @@ services:
     networks:
       - mysite-backend-network
   web:
-    image: getting-started
+    image: angelo234/tazu-site:latest
     environment:
       PG_HOST: meili
     ports:
