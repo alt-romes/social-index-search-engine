@@ -10,4 +10,5 @@ RUN mkdir /Work
 COPY social-index-search-engine /Work
 WORKDIR /Work
 RUN npm install
+RUN node src/database/dbstarter.js
 EXPOSE 3000
