@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="style.css">
         <!-- <link rel="icon" href="./favicon.ico" type="image/x-icon"> -->
     </head>
-    <body>
+    <body style="background-color:#4674A3">
         <section>
             <nav id="main-nav">
                 <p class="log-in-msg" style="" data-logged=false>Your ID</p>
@@ -23,7 +23,7 @@
                               <div>
                                 <label for="password">Password</label>
                                 <input id="password" label="password" type="password">
-                                <input type="submit" style="margin-top:0.5em; width:50%;" value="Submit">
+                                <input type="submit" style="display:none">
                             </div>
                         </form>
                     </li>
@@ -41,7 +41,7 @@
                               <div>
                                 <label for="password">Password</label>
                                 <input id="password" label="password" type="password">
-                                <input type="submit" style="margin-top:0.5em; width:50%;" value="Submit">
+                                <input type="submit" style="display:none">
                             </div>
                         </form>
                     </li>
@@ -76,13 +76,25 @@
             </main>
         </section>
         <section>
-            <main>
-                <h1 style="margin-bottom: 1.5em;">How To Use</h1>
-                <p>Insert a https:// link in the search bar to add a link to your bookmarks</p>
-                <p>To follow other users, insert in the search bar 'follow:[userID]' </p>
-                <p>To search, just input any phrase into the seach engine</p>
-                <p>You'll be able to see your bookmarks and the bookmarks of the people you follow</p>
-                
+            <main id="about-main" style="display:flex; justify-content: space-between; padding: 2em 5em;">
+                <div style="max-width:30em;">
+                    <h1 style="margin-bottom: 1.5em;">Usage</h1>
+                    <p>Add a link to your index through the insertion of a link starting with https:// in the search bar</p>
+                    <p>To follow other users, insert their user id in the search bar. Writing 'follow:25' will follow user with ID#25</p>
+                    <p>To search, just input any phrase into the seach engine. You'll be able to see your index and the index of the people you follow. Search your curiosities.</p>
+                    <h1 style="margin-top:2em;">About</h1>
+                    <p>Tazu (尋) in japanese means inquire, to look for. The purpose of our work is to not lose the information we have the desire to acquire.</p>
+                    <p>This website allows you to create your own personalized search engine, where you can share your bookmarks with your friends and see what they have been curious about. With easy access and creative layout, where you can find a new organized home for your favorite websites.</p>
+                    <p>Our mascot, is a cat because of the amount of curiosity we share with this animal.</p>
+                </div>
+                <div>
+                    <h1 style="margin-bottom: 1.5em;">Upload bookmarks</h1>
+                    <p>You can import your <em>firefox</em> bookmarks directly to your index</p>
+                    <div>
+                        <label>Upload:</label>
+                        <input type="file" />
+                    </div>
+                </div>
             </main>
         </section>
         <script src="login.js"></script>
